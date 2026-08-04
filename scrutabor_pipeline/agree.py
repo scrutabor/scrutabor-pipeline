@@ -1,19 +1,24 @@
 """The source-agreement rule: is the corpus's editorial analysis among the
-candidates an independent analyzer proposes for the same form?
+candidates each independent analyzer proposes for the same form?
 
-Verdicts:
-- AGREE            analyzer proposes our exact reading under our lemma
-- AGREE_FORM_ONLY  our reading is among the candidates, but the lemma
-                   identity could not be established (lemma unknown to the
-                   analyzer, or known under a different entry)
-- DIVERGE          the analyzer knows the form but proposes no candidate
-                   matching our reading — review queue material
-- FORM_ABSENT      the analyzer does not know the form at all
+Each analyzer votes separately:
+- CONFIRMS      proposes our exact reading under our dictionary entry
+- FORM_MATCH    proposes our reading, but under an entry that could not be
+                linked to our lemma
+- CONTRADICTS   knows the form but proposes no reading matching ours
+- ABSENT        does not know the form
+
+Combined verdict for a token:
+- DIVERGE          any analyzer contradicts — review queue material
+- AGREE            no contradiction, at least one analyzer confirms
+                   (detail names which)
+- AGREE_FORM_ONLY  no contradiction, only form-level matches
+- FORM_ABSENT      no analyzer knows the form
 """
 
 from dataclasses import dataclass
 
-from .whitakers import Candidate, candidates, lemma_candidates
+from . import collatinus, whitakers
 
 # Recorded classification rulings (corpus SCHEMA.md, TERMINOLOGY decisions):
 # our part of speech on the left may match these analyzer parts of speech.
@@ -31,24 +36,22 @@ POS_RULINGS: dict[str, set[str]] = {
     "adv": {"adv", "conj"},
 }
 
-# Lemma spellings the analyzer dictionaries as separate entries: our lemma
-# on the left, every analyzer entry that IS the same word on the right.
+# Lemma spellings the analyzers dictionary as separate or fused entries:
+# our lemma on the left, every analyzer entry that IS the same word on the
+# right.
 LEMMA_ALIASES: dict[str, tuple[str, ...]] = {
     "ab": ("a", "ab"),  # Whitaker's carries a and ab as two entries
+    "tu": ("tu", "tecum"),  # Collatinus dictionaries the fused tecum itself
 }
 
-# Lemmas the analyzer's dictionary does not carry, each with the reason.
-# An absent form under one of these is expected, not a finding.
-EXPECTED_ABSENT: dict[str, str] = {
-    "Maria": "proper name (Hebrew), not in the analyzer dictionary",
-    "Michael": "proper name (Hebrew), not in the analyzer dictionary",
-    "Ioannes": "proper name (Hebrew), not in the analyzer dictionary",
-    "Iesus": "proper name (Hebrew), not in the analyzer dictionary",
-}
+# Lemmas no analyzer carries, each with the reason. An absent form under one
+# of these is expected, not a finding. (Currently empty: Collatinus knows
+# even the Hebrew proper names of the prayers.)
+EXPECTED_ABSENT: dict[str, str] = {}
 
-# Features the corpus stores that the comparison checks when the analyzer
-# offers an opinion on them. decl/conj are checked against the lexeme
-# category separately; `governs` is editorial-only (not exposed by the port).
+# Features the corpus stores that the comparison checks when an analyzer
+# offers an opinion on them. decl/conj and `governs` are editorial-level
+# (not exposed comparably by the adapters).
 COMPARED = ("case", "number", "gender", "person", "tense", "mood", "voice", "degree")
 
 
@@ -56,21 +59,21 @@ COMPARED = ("case", "number", "gender", "person", "tense", "mood", "voice", "deg
 class Verdict:
     token_ref: str  # "<text-id>.<word-id>"
     verdict: str
+    sources: str = ""  # analyzers that confirmed, "+"-joined
     detail: str = ""
 
 
-def _features_match(ours: dict, candidate: Candidate) -> bool:
-    theirs = candidate.feature_dict()
+def _features_match(ours: dict, theirs: dict) -> bool:
     for key in COMPARED:
         our_value = ours.get(key)
         their_value = theirs.get(key)
         if our_value is None or their_value is None:
             continue  # one side has no opinion — compatible
         if key == "voice" and our_value == "dep":
-            # A deponent's form IS passive; the analyzer says pass, we say
-            # dep about the lemma. Same claim, two vocabularies.
-            if their_value != "pass":
-                return False
+            # Deponency is a lemma-level fact the analyzers vocabularize
+            # differently: Whitaker's reports the passive FORM, Collatinus
+            # the active MEANING. Lemma identity is checked separately, so
+            # the voice tag itself is not compared for deponents.
             continue
         if our_value != their_value:
             return False
@@ -81,33 +84,67 @@ def _pos_match(our_pos: str, candidate_pos: str) -> bool:
     return candidate_pos == our_pos or candidate_pos in POS_RULINGS.get(our_pos, set())
 
 
+def _whitakers_vote(word: dict, our_pos: str, ours: dict) -> tuple[str, str]:
+    cands = whitakers.candidates(word["form"])
+    if not cands:
+        return "ABSENT", ""
+    matching = [
+        c for c in cands if _pos_match(our_pos, c.pos) and _features_match(ours, c.feature_dict())
+    ]
+    if not matching:
+        proposals = sorted({f"{c.pos}:{c.feature_dict()}" for c in cands})
+        return "CONTRADICTS", f"whitakers proposes {proposals[:6]}"
+    ids = {
+        c.lexeme_id
+        for spelling in LEMMA_ALIASES.get(word["lemma"], (word["lemma"],))
+        for c in whitakers.lemma_candidates(spelling)
+        if _pos_match(our_pos, c.pos)
+    }
+    if ids and any(c.lexeme_id in ids for c in matching):
+        return "CONFIRMS", ""
+    return "FORM_MATCH", f"whitakers cannot link lemma {word['lemma']!r}"
+
+
+def _collatinus_vote(word: dict, our_pos: str, ours: dict) -> tuple[str, str]:
+    cands = collatinus.candidates(word["form"])
+    if not cands:
+        return "ABSENT", ""
+    matching = [c for c in cands if _features_match(ours, c.feature_dict())]
+    if not matching:
+        proposals = sorted({f"{c.lemma}:{c.feature_dict()}" for c in cands})
+        return "CONTRADICTS", f"collatinus proposes {proposals[:6]}"
+    accepted = {
+        collatinus.fold_lemma(spelling)
+        for spelling in LEMMA_ALIASES.get(word["lemma"], (word["lemma"],))
+    }
+    if any(c.lemma in accepted for c in matching):
+        return "CONFIRMS", ""
+    return "FORM_MATCH", f"collatinus reads it under {sorted({c.lemma for c in matching})[:4]}"
+
+
 def compare(text_id: str, word: dict) -> Verdict:
     ref = f"{text_id}.{word['id']}"
     ours = dict(word["morph"])
     our_pos = ours.pop("pos")
-    lemma = word["lemma"]
 
-    cands = candidates(word["form"])
-    if not cands:
-        if lemma in EXPECTED_ABSENT:
-            return Verdict(ref, "FORM_ABSENT", f"expected: {EXPECTED_ABSENT[lemma]}")
-        return Verdict(ref, "FORM_ABSENT", f"form {word['form']!r} unknown to the analyzer")
-
-    matching = [c for c in cands if _pos_match(our_pos, c.pos) and _features_match(ours, c)]
-    if not matching:
-        proposals = sorted({f"{c.pos}:{c.feature_dict()}" for c in cands})
-        return Verdict(ref, "DIVERGE", f"ours={our_pos}:{ours} analyzer={proposals[:6]}")
-
-    ids = {
-        c.lexeme_id
-        for spelling in LEMMA_ALIASES.get(lemma, (lemma,))
-        for c in lemma_candidates(spelling)
-        if _pos_match(our_pos, c.pos)
+    votes = {
+        "whitakers": _whitakers_vote(word, our_pos, ours),
+        "collatinus": _collatinus_vote(word, our_pos, ours),
     }
-    if ids and any(c.lexeme_id in ids for c in matching):
-        return Verdict(ref, "AGREE")
-    return Verdict(
-        ref,
-        "AGREE_FORM_ONLY",
-        f"reading matches, lemma {lemma!r} not linkable to the analyzer entry",
-    )
+
+    contradictions = [f"{d}" for v, d in votes.values() if v == "CONTRADICTS"]
+    if contradictions:
+        return Verdict(ref, "DIVERGE", detail=f"ours={our_pos}:{ours} | " + " | ".join(contradictions))
+
+    confirming = [name for name, (v, _) in votes.items() if v == "CONFIRMS"]
+    if confirming:
+        return Verdict(ref, "AGREE", sources="+".join(confirming))
+
+    form_matches = [d for v, d in votes.values() if v == "FORM_MATCH"]
+    if form_matches:
+        return Verdict(ref, "AGREE_FORM_ONLY", detail="; ".join(form_matches))
+
+    lemma = word["lemma"]
+    if lemma in EXPECTED_ABSENT:
+        return Verdict(ref, "FORM_ABSENT", detail=f"expected: {EXPECTED_ABSENT[lemma]}")
+    return Verdict(ref, "FORM_ABSENT", detail=f"form {word['form']!r} unknown to every analyzer")

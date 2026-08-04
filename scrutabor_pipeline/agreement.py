@@ -40,6 +40,7 @@ def main(argv: list[str]) -> int:
         return 2
 
     counts = Counter(v.verdict for v in verdicts)
+    by_sources = Counter(v.sources for v in verdicts if v.verdict == "AGREE")
     for v in verdicts:
         if v.verdict != "AGREE":
             print(f"{v.verdict:15} {v.token_ref:35} {v.detail}")
@@ -54,7 +55,8 @@ def main(argv: list[str]) -> int:
 
     subject = " ".join(f"{k.lower()}={counts.get(k, 0)}" for k in
                        ("AGREE", "AGREE_FORM_ONLY", "DIVERGE", "FORM_ABSENT"))
-    print(f"VERDICT OK texts={texts} tokens={len(verdicts)} {subject} queue={len(queue)}")
+    breakdown = " ".join(f"{k}={n}" for k, n in sorted(by_sources.items()))
+    print(f"VERDICT OK texts={texts} tokens={len(verdicts)} {subject} [{breakdown}] queue={len(queue)}")
     return 0
 
 
