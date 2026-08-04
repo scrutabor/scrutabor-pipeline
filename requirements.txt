@@ -1,6 +1,10 @@
 # Whitaker's Words, Python port (MIT). Pinned to a commit — the project has
 # no PyPI release; the data files (public domain) ship inside the package.
+# Cold spare: scrutabor/mirror-whitakers-words holds this SHA; repoint here
+# only if the upstream vanishes.
 whitakers_words @ git+https://github.com/blagae/whitakers_words.git@74eaaa2d7096469311471c42e3a4d2eb8a87d247
 # Collatinus lemmatizer, Python port (MIT). Last released for Python 3.7 —
 # revived by scrutabor_pipeline.compat (two removed stdlib aliases).
+# Cold spares: scrutabor/mirror-collatinus-python (source, tag 0.1.6) and
+# scrutabor/mirror-collatinus (upstream C++ + the canonical quantity data).
 pycollatinus==0.1.6
