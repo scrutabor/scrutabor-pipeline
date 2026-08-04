@@ -1,0 +1,3 @@
+# Whitaker's Words, Python port (MIT). Pinned to a commit — the project has
+# no PyPI release; the data files (public domain) ship inside the package.
+whitakers_words @ git+https://github.com/blagae/whitakers_words.git@74eaaa2d7096469311471c42e3a4d2eb8a87d247
