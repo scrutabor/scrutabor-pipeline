@@ -10,9 +10,9 @@ import unicodedata
 
 LIGATURES = {"æ": "ae", "œ": "oe", "Æ": "Ae", "Œ": "Oe", "ǽ": "ae", "Ǽ": "Ae"}
 
-# Liturgical spellings whose dictionary heads differ (recorded in the corpus
-# SCHEMA/BACKLOG as expected divergences). Applied as prefix rewrites so
-# every inflected form maps: quotidiánum -> cotidianum.
+# Liturgical spellings whose dictionary heads differ — recorded here so the
+# divergence is expected, never silent. Applied as prefix rewrites so every
+# inflected form maps: quotidiánum -> cotidianum.
 SPELLING_PREFIXES = [
     ("quotidian", "cotidian"),
     ("tentati", "temptati"),
