@@ -51,12 +51,20 @@ LEMMA_ALIASES: dict[str, tuple[str, ...]] = {
     # Homograph discriminators (corpus SCHEMA.md): the key carries the part of
     # speech, the analyzers are asked about the word itself.
     "hic_adverbium": ("hic",),
+    "memini": ("memini", "memento"),  # Collatinus heads the imperative itself
 }
 
 # Lemmas no analyzer carries, each with the reason. An absent form under one
 # of these is expected, not a finding. (Currently empty: Collatinus knows
 # even the Hebrew proper names of the prayers.)
-EXPECTED_ABSENT: dict[str, str] = {}
+EXPECTED_ABSENT: dict[str, str] = {
+    # Martyrs of the Canon whose names are in neither analyzer's lexicon. The
+    # genitive of each is secure from the chain of genitives it stands in;
+    # only the dictionaries are silent.
+    "Cletus": "pope and martyr of the Communicantes; in neither lexicon",
+    "Cosmas": "martyr of the Communicantes; in neither lexicon",
+    "Damianus": "martyr of the Communicantes; in neither lexicon",
+}
 
 # Contradictions already adjudicated: the named analyzer is demonstrably
 # wrong about this form, or models it differently from us in a way we have
@@ -88,6 +96,55 @@ FEATURE_RULINGS: dict[str, dict[str, str]] = {
             "genitive of vos, which is what misereor governs here — Whitaker's "
             "confirms it"
         )
+    },
+    # --- the Canon ---
+    "refrigerium:refrigérii": {
+        "whitakers": (
+            "gives -ium nouns only the contracted genitive singular (refrigeri) and so reads "
+            "the uncontracted refrigérii as a locative — the same paradigm gap recorded for "
+            "filius above; Collatinus confirms the genitive"
+        )
+    },
+    "clemens:clementíssime": {
+        "whitakers": (
+            "offers only the superlative ADVERB for this form; clementíssime Pater is the "
+            "vocative agreeing with Pater, which Collatinus heads and confirms"
+        )
+    },
+    "martyr:Mártyrum": {
+        "whitakers": (
+            "returns genitive SINGULAR for mártyrum, a number the form cannot carry (the "
+            "genitive singular is mártyris) — a porting artefact; Collatinus gives the "
+            "genitive plural the series of plural genitives requires"
+        )
+    },
+    "memini:Meménto": {
+        "whitakers": (
+            "tags the form present; meménto is the FUTURE imperative, and the only imperative "
+            "memini has. Collatinus agrees on the tense under its own lemma. Omitting the "
+            "tense would have satisfied both analyzers by claiming less than is known"
+        )
+    },
+    "Linus:Lini": {
+        "whitakers": (
+            "carries no pope Linus — only linum (flax) and lino — and so reads the name as a "
+            "neuter noun; Collatinus heads Linus and confirms the genitive"
+        )
+    },
+    "Clemens:Cleméntis": {
+        "whitakers": (
+            "carries only the adjective clemens, not the pope's name; Collatinus confirms the "
+            "genitive of the name"
+        )
+    },
+    "Perpetua:Perpétua": {
+        "whitakers": (
+            "carries no martyr Perpetua and reads the name as the adjective perpetuus"
+        ),
+        "collatinus": (
+            "likewise heads only perpetuus/perpetuum; neither lexicon carries her, so the "
+            "parse stands on the edition alone"
+        ),
     },
     "fio:fíeri": {
         "collatinus": (
