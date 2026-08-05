@@ -56,3 +56,21 @@ def test_ecclesiastical_vocabulary_is_admitted():
     assert any(c.pos == "adj" for c in candidates("omnipoténti"))
     assert any(c.pos == "noun" for c in candidates("Archángelo"))
     assert any(c.pos == "noun" for c in candidates("tentatiónem"))
+
+
+def test_participle_maps_to_verb_with_open_mood():
+    # natum: perfect passive participle of nascor/natus (and of gigno's
+    # natus) — Whitaker's VPAR must come back as a verb candidate whose
+    # mood is open (matching the corpus's mood "part") with tense and
+    # voice stated.
+    from scrutabor_pipeline.whitakers import candidates
+
+    parts = [
+        c
+        for c in candidates("natum")
+        if c.pos == "verb"
+        and dict(c.features).get("tense") == "perf"
+        and dict(c.features).get("voice") == "pass"
+    ]
+    assert parts, "no perfect passive participle candidate for natum"
+    assert all(dict(c.features).get("mood") is None for c in parts)

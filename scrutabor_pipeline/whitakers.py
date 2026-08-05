@@ -14,6 +14,11 @@ from .normalize import analyzer_query
 
 POS = {
     "V": "verb",
+    # Participles are verb tokens in the corpus (mood "part"); Whitaker's
+    # heads them as their own word type. Its VPAR inflections carry no
+    # Mood feature, so the candidate's mood stays open and matches "part",
+    # while finite V candidates (whose mood IS stated) cannot.
+    "VPAR": "verb",
     "N": "noun",
     "ADJ": "adj",
     "PRON": "pron",

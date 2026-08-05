@@ -45,6 +45,7 @@ TOKENS = {
     "subjonctif": ("mood", "subj"),
     "impératif": ("mood", "imp"),
     "infinitif": ("mood", "inf"),
+    "participe": ("mood", "part"),
     "actif": ("voice", "act"),
     "passif": ("voice", "pass"),
     "comparatif": ("degree", "comp"),

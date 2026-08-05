@@ -47,3 +47,17 @@ def test_collatinus_reads_liturgical_orthography_via_normalization():
     assert any(
         c.lemma == "saeculum" and c.feature_dict().get("case") == "acc" for c in cands
     )
+
+
+def test_parse_morph_maps_participle():
+    from scrutabor_pipeline.collatinus import parse_morph
+
+    features = parse_morph("participe parfait passif accusatif masculin singulier")
+    assert features == {
+        "mood": "part",
+        "tense": "perf",
+        "voice": "pass",
+        "case": "acc",
+        "gender": "m",
+        "number": "sg",
+    }
