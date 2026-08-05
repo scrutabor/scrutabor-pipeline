@@ -1,3 +1,4 @@
+from scrutabor_pipeline import agree
 from scrutabor_pipeline.agree import compare
 
 
@@ -108,3 +109,38 @@ def test_lemma_alias_links_a_to_ab():
 def test_fused_tecum_is_linked_by_alias():
     v = compare("t", word("tecum", "tu", pos="pron", case="abl", number="sg"))
     assert v.verdict == "AGREE"
+
+
+# --- adjudicated contradictions (FEATURE_RULINGS) -------------------------
+
+
+def test_ruling_sets_one_analyzer_aside_and_says_so():
+    """A recorded ruling turns a contradiction into an abstention — and the
+    token is reported as ruled, never as plain agreement."""
+    v = compare("t", word("vestri", "vos", pos="pron", case="gen", number="pl"))
+    assert v.verdict == "AGREE_RULED"
+    assert "whitakers" in v.sources
+    assert "collatinus set aside" in v.detail
+
+
+def test_ruling_never_invents_a_confirmation():
+    """With the only analyzer that knows the form set aside, nothing
+    machine-checkable remains and the verdict says exactly that."""
+    v = compare("t", word("quǽsumus", "quaeso", pos="verb", person=1, number="pl",
+                          tense="pres", mood="ind", voice="act", conj=3))
+    assert v.verdict == "EDITORIAL_ONLY"
+    assert "no analyzer confirms" in v.detail
+
+
+def test_a_ruling_does_not_cover_a_different_word():
+    """Rulings are keyed to lemma AND form: they cannot leak."""
+    v = compare("t", word("vestris", "vos", pos="pron", case="gen", number="pl"))
+    assert v.verdict != "AGREE_RULED"
+
+
+def test_every_ruling_carries_a_reason():
+    for key, analyzers in agree.FEATURE_RULINGS.items():
+        assert analyzers, f"{key}: empty ruling"
+        for name, reason in analyzers.items():
+            assert name in ("whitakers", "collatinus"), f"{key}: unknown analyzer {name}"
+            assert len(reason) > 40, f"{key}/{name}: a ruling must argue itself"

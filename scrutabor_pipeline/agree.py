@@ -12,8 +12,14 @@ Combined verdict for a token:
 - DIVERGE          any analyzer contradicts — review queue material
 - AGREE            no contradiction, at least one analyzer confirms
                    (detail names which)
+- AGREE_RULED      as AGREE, but one analyzer's contradiction was set aside
+                   by a recorded ruling (FEATURE_RULINGS) — counted apart so
+                   an adjudicated token never hides inside a clean number
 - AGREE_FORM_ONLY  no contradiction, only form-level matches
 - FORM_ABSENT      no analyzer knows the form
+- EDITORIAL_ONLY   the only analyzer that knows the form was set aside by a
+                   ruling, so nothing machine-checkable remains — the parse
+                   rests on the edition alone and says so in its provenance
 """
 
 from dataclasses import dataclass
@@ -48,6 +54,47 @@ LEMMA_ALIASES: dict[str, tuple[str, ...]] = {
 # of these is expected, not a finding. (Currently empty: Collatinus knows
 # even the Hebrew proper names of the prayers.)
 EXPECTED_ABSENT: dict[str, str] = {}
+
+# Contradictions already adjudicated: the named analyzer is demonstrably
+# wrong about this form, or models it differently from us in a way we have
+# reasoned through. Keyed "<lemma>:<form>" on the corpus's own spelling.
+#
+# A ruling makes that ONE analyzer abstain — it never invents a
+# confirmation. If the other analyzer does not confirm, the token still
+# does not reach AGREE, and the report counts ruled tokens separately so
+# they can never hide inside a clean number. Every entry carries the
+# reason it was accepted; that reason is the whole value of the mechanism.
+FEATURE_RULINGS: dict[str, dict[str, str]] = {
+    "quaeso:quǽsumus": {
+        "collatinus": (
+            "reads the fossilised parenthetical as its own lemma and tags it "
+            "3rd singular; the form is the 1st plural of quaeso, as Whitaker's "
+            "and every grammar have it"
+        )
+    },
+    "vos:vobíscum": {
+        "collatinus": (
+            "dictionaries the fused vobis+cum as one lemma and tags it "
+            "singular; the enclitic attaches to a plural ablative (cf. the "
+            "tu/tecum alias above)"
+        )
+    },
+    "vos:vestri": {
+        "collatinus": (
+            "links the form only to the possessive vester; vestri is also the "
+            "genitive of vos, which is what misereor governs here — Whitaker's "
+            "confirms it"
+        )
+    },
+    "filius:Fílii": {
+        "whitakers": (
+            "gives -ius nouns only the contracted genitive singular (fili) and "
+            "so reads filii as plural or locative; the uncontracted filii is "
+            "the genitive throughout the Vulgate and the liturgical books, and "
+            "Collatinus confirms it"
+        )
+    },
+}
 
 # Features the corpus stores that the comparison checks when an analyzer
 # offers an opinion on them. decl/conj and `governs` are editorial-level
@@ -132,18 +179,42 @@ def compare(text_id: str, word: dict) -> Verdict:
         "collatinus": _collatinus_vote(word, our_pos, ours),
     }
 
+    # An adjudicated contradiction abstains instead of counting against us,
+    # and the token is reported as ruled rather than as plain agreement.
+    rulings = FEATURE_RULINGS.get(f"{word['lemma']}:{word['form']}", {})
+    ruled = [
+        f"{name} set aside: {reason}"
+        for name, reason in rulings.items()
+        if votes.get(name, ("", ""))[0] == "CONTRADICTS"
+    ]
+    for name in rulings:
+        if votes.get(name, ("", ""))[0] == "CONTRADICTS":
+            votes[name] = ("ABSTAINS", "")
+
     contradictions = [f"{d}" for v, d in votes.values() if v == "CONTRADICTS"]
     if contradictions:
         return Verdict(ref, "DIVERGE", detail=f"ours={our_pos}:{ours} | " + " | ".join(contradictions))
 
     confirming = [name for name, (v, _) in votes.items() if v == "CONFIRMS"]
     if confirming:
+        if ruled:
+            return Verdict(
+                ref, "AGREE_RULED", sources="+".join(confirming), detail="; ".join(ruled)
+            )
         return Verdict(ref, "AGREE", sources="+".join(confirming))
 
     form_matches = [d for v, d in votes.values() if v == "FORM_MATCH"]
     if form_matches:
         return Verdict(ref, "AGREE_FORM_ONLY", detail="; ".join(form_matches))
 
+    # A ruling set the only opinion aside: say that, rather than claim the
+    # form is unknown — it is known, and we judged it wrong.
+    if ruled:
+        return Verdict(
+            ref,
+            "EDITORIAL_ONLY",
+            detail=f"no analyzer confirms {word['form']!r} — " + "; ".join(ruled),
+        )
     lemma = word["lemma"]
     if lemma in EXPECTED_ABSENT:
         return Verdict(ref, "FORM_ABSENT", detail=f"expected: {EXPECTED_ABSENT[lemma]}")
