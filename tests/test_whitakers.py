@@ -74,3 +74,17 @@ def test_participle_maps_to_verb_with_open_mood():
     ]
     assert parts, "no perfect passive participle candidate for natum"
     assert all(dict(c.features).get("mood") is None for c in parts)
+
+
+def test_ordinal_numeral_comes_back_as_adjective():
+    # tertia: Whitaker's heads ordinals as NUM; the corpus tags them adj.
+    from scrutabor_pipeline.whitakers import candidates
+
+    readings = [
+        c
+        for c in candidates("tertia")
+        if c.pos == "adj"
+        and dict(c.features).get("case") == "abl"
+        and dict(c.features).get("gender") == "f"
+    ]
+    assert readings, "no ablative feminine adjective candidate for tertia"

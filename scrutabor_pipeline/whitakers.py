@@ -21,6 +21,9 @@ POS = {
     "VPAR": "verb",
     "N": "noun",
     "ADJ": "adj",
+    # Whitaker's separates numerals from adjectives; the corpus tags
+    # declining ordinals (unus, tertius) as adj.
+    "NUM": "adj",
     "PRON": "pron",
     "ADV": "adv",
     "CONJ": "conj",
