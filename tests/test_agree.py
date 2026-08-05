@@ -144,3 +144,21 @@ def test_every_ruling_carries_a_reason():
         for name, reason in analyzers.items():
             assert name in ("whitakers", "collatinus"), f"{key}: unknown analyzer {name}"
             assert len(reason) > 40, f"{key}/{name}: a ruling must argue itself"
+
+
+def test_declared_analyzers_follows_the_schema_cascade():
+    """A word's own analysis wins; else the document's word default; else
+    the document default. Only analyzer names count — 'editorial' is our
+    own work and a witness id is not a vote about morphology."""
+    from scrutabor_pipeline.agreement import declared_analyzers
+
+    doc = {
+        "analysis_defaults": {"sources": ["editorial"]},
+        "analysis_defaults_words": {"sources": ["editorial", "whitakers", "collatinus"]},
+    }
+    assert declared_analyzers(doc, {"form": "x"}) == {"whitakers", "collatinus"}
+    narrower = {"form": "x", "analysis": {"sources": ["editorial", "collatinus"]}}
+    assert declared_analyzers(doc, narrower) == {"collatinus"}
+    witness_only = {"form": "x", "analysis": {"sources": ["editorial", "do"]}}
+    assert declared_analyzers(doc, witness_only) == set()
+    assert declared_analyzers({"analysis_defaults": {"sources": ["editorial"]}}, {"form": "x"}) == set()

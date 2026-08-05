@@ -52,6 +52,10 @@ LEMMA_ALIASES: dict[str, tuple[str, ...]] = {
     # speech, the analyzers are asked about the word itself.
     "hic_adverbium": ("hic",),
     "memini": ("memini", "memento"),  # Collatinus heads the imperative itself
+    # Collatinus heads the adjective under its archaic nominative saluos,
+    # which the u/v fold of salvus (saluus) cannot reach. Both analyzers
+    # do read the word; only the spelling of the head differs.
+    "salvus": ("salvus", "salvos"),
 }
 
 # Lemmas no analyzer carries, each with the reason. An absent form under one
