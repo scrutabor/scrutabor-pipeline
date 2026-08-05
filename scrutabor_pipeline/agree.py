@@ -48,6 +48,9 @@ POS_RULINGS: dict[str, set[str]] = {
 LEMMA_ALIASES: dict[str, tuple[str, ...]] = {
     "ab": ("a", "ab"),  # Whitaker's carries a and ab as two entries
     "tu": ("tu", "tecum"),  # Collatinus dictionaries the fused tecum itself
+    # Homograph discriminators (corpus SCHEMA.md): the key carries the part of
+    # speech, the analyzers are asked about the word itself.
+    "hic_adverbium": ("hic",),
 }
 
 # Lemmas no analyzer carries, each with the reason. An absent form under one
@@ -84,6 +87,20 @@ FEATURE_RULINGS: dict[str, dict[str, str]] = {
             "links the form only to the possessive vester; vestri is also the "
             "genitive of vos, which is what misereor governs here — Whitaker's "
             "confirms it"
+        )
+    },
+    "fio:fíeri": {
+        "collatinus": (
+            "reads the present infinitive as an imperative; fíeri is the infinitive of fio, "
+            "as its own dictionary head (fio, fíeri, factus sum) and Whitaker's have it, and "
+            "fio has no passive imperative"
+        )
+    },
+    "sanctificator:sanctificátor": {
+        "whitakers": (
+            "carries no agent noun sanctificator and reads the -tor ending as the archaic "
+            "future passive imperative of sanctifico; the word is the Christian-Latin noun "
+            "sanctificátor, sanctificatóris, which Collatinus heads and confirms in the vocative"
         )
     },
     "filius:Fílii": {
