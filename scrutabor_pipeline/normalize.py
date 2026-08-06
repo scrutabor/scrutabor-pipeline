@@ -39,7 +39,7 @@ def analyzer_query(form: str) -> str:
     text = text.lower().replace("j", "i")
     for liturgical, classical in SPELLING_PREFIXES:
         if text.startswith(liturgical):
-            text = classical + text[len(liturgical):]
+            text = classical + text[len(liturgical) :]
     return text
 
 

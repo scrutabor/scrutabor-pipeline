@@ -7,14 +7,18 @@ def word(form, lemma, **morph):
 
 
 def test_correct_parse_agrees_by_both_analyzers():
-    v = compare("t", word("Mater", "mater", pos="noun", case="voc", number="sg", gender="f", decl=3))
+    v = compare(
+        "t", word("Mater", "mater", pos="noun", case="voc", number="sg", gender="f", decl=3)
+    )
     assert v.verdict == "AGREE"
     assert v.sources == "whitakers+collatinus"
 
 
 def test_wrong_parse_diverges():
     # mater cannot be accusative — the guard must catch a wrong editorial parse
-    v = compare("t", word("Mater", "mater", pos="noun", case="acc", number="sg", gender="f", decl=3))
+    v = compare(
+        "t", word("Mater", "mater", pos="noun", case="acc", number="sg", gender="f", decl=3)
+    )
     assert v.verdict == "DIVERGE"
 
 
@@ -126,8 +130,20 @@ def test_ruling_sets_one_analyzer_aside_and_says_so():
 def test_ruling_never_invents_a_confirmation():
     """With the only analyzer that knows the form set aside, nothing
     machine-checkable remains and the verdict says exactly that."""
-    v = compare("t", word("quǽsumus", "quaeso", pos="verb", person=1, number="pl",
-                          tense="pres", mood="ind", voice="act", conj=3))
+    v = compare(
+        "t",
+        word(
+            "quǽsumus",
+            "quaeso",
+            pos="verb",
+            person=1,
+            number="pl",
+            tense="pres",
+            mood="ind",
+            voice="act",
+            conj=3,
+        ),
+    )
     assert v.verdict == "EDITORIAL_ONLY"
     assert "no analyzer confirms" in v.detail
 
@@ -161,4 +177,7 @@ def test_declared_analyzers_follows_the_schema_cascade():
     assert declared_analyzers(doc, narrower) == {"collatinus"}
     witness_only = {"form": "x", "analysis": {"sources": ["editorial", "do"]}}
     assert declared_analyzers(doc, witness_only) == set()
-    assert declared_analyzers({"analysis_defaults": {"sources": ["editorial"]}}, {"form": "x"}) == set()
+    assert (
+        declared_analyzers({"analysis_defaults": {"sources": ["editorial"]}}, {"form": "x"})
+        == set()
+    )

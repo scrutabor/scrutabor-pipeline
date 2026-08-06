@@ -13,5 +13,12 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+          cache: pip
+          cache-dependency-path: requirements-dev.txt
       - run: pip install -r requirements-dev.txt
+      # Lint and types before the tests: they are the fast half, and the
+      # mistakes they catch are the ones a test would report obscurely.
+      - run: ruff check .
+      - run: ruff format --check .
+      - run: mypy
       - run: python -m pytest

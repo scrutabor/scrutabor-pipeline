@@ -44,9 +44,7 @@ def test_collatinus_knows_the_hebrew_proper_names():
 
 def test_collatinus_reads_liturgical_orthography_via_normalization():
     cands = candidates("sǽcula")
-    assert any(
-        c.lemma == "saeculum" and c.feature_dict().get("case") == "acc" for c in cands
-    )
+    assert any(c.lemma == "saeculum" and c.feature_dict().get("case") == "acc" for c in cands)
 
 
 def test_parse_morph_maps_participle():

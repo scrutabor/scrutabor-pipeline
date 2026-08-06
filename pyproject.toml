@@ -1,0 +1,35 @@
+[project]
+name = "scrutabor-pipeline"
+version = "0.1.0"
+description = "Source-agreement machine for the Scrutabor corpus"
+requires-python = ">=3.12"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "RUF"]
+ignore = [
+    # Latin and Polish: the accented and ligatured characters are the point.
+    "RUF001",
+    "RUF002",
+    "RUF003",
+]
+
+[tool.ruff.format]
+quote-style = "double"
+
+[tool.mypy]
+python_version = "3.12"
+files = ["scrutabor_pipeline", "tests"]
+warn_unused_ignores = true
+warn_redundant_casts = true
+no_implicit_optional = true
+# The two analyzers are unreleased ports without type information.
+[[tool.mypy.overrides]]
+module = ["whitakers_words.*", "pycollatinus.*"]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

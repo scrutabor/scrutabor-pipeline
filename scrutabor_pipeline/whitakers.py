@@ -43,7 +43,14 @@ CASE = {
 
 NUMBER = {"S": "sg", "P": "pl"}
 GENDER = {"M": "m", "F": "f", "N": "n"}  # C (common) and X (unknown) -> wildcard
-TENSE = {"PRES": "pres", "IMPF": "impf", "FUT": "fut", "PERF": "perf", "PLUP": "plup", "FUTP": "futperf"}
+TENSE = {
+    "PRES": "pres",
+    "IMPF": "impf",
+    "FUT": "fut",
+    "PERF": "perf",
+    "PLUP": "plup",
+    "FUTP": "futperf",
+}
 MOOD = {"IND": "ind", "SUB": "subj", "IMP": "imp", "INF": "inf"}
 VOICE = {"ACTIVE": "act", "PASSIVE": "pass"}
 DEGREE = {"COMP": "comp", "SUP": "sup"}  # POS (positive) -> absent, like the corpus

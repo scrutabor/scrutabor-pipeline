@@ -12,8 +12,7 @@ def test_deponent_form_comes_back_passive():
     cands = candidates("Confíteor")
     verb = [c.feature_dict() for c in cands if c.pos == "verb"]
     assert any(
-        f.get("voice") == "pass" and f.get("person") == 1 and f.get("mood") == "ind"
-        for f in verb
+        f.get("voice") == "pass" and f.get("person") == 1 and f.get("mood") == "ind" for f in verb
     )
 
 

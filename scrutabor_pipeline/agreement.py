@@ -23,7 +23,6 @@ from pathlib import Path
 
 from .agree import compare
 
-
 # Sources that are not analyzers: our own work, and the witnesses, whose
 # names this report has no opinion about.
 ANALYZERS = {"whitakers", "collatinus"}
@@ -87,8 +86,17 @@ def main(argv: list[str]) -> int:
     queue_path = Path("review-queue.json")
     queue_path.write_text(json.dumps(queue, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
-    subject = " ".join(f"{k.lower()}={counts.get(k, 0)}" for k in
-                       ("AGREE", "AGREE_RULED", "AGREE_FORM_ONLY", "EDITORIAL_ONLY", "DIVERGE", "FORM_ABSENT"))
+    subject = " ".join(
+        f"{k.lower()}={counts.get(k, 0)}"
+        for k in (
+            "AGREE",
+            "AGREE_RULED",
+            "AGREE_FORM_ONLY",
+            "EDITORIAL_ONLY",
+            "DIVERGE",
+            "FORM_ABSENT",
+        )
+    )
     breakdown = " ".join(f"{k}={n}" for k, n in sorted(by_sources.items()))
     for line in provenance:
         print(f"PROVENANCE      {line}")

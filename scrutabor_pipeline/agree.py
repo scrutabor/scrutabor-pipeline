@@ -142,9 +142,7 @@ FEATURE_RULINGS: dict[str, dict[str, str]] = {
         )
     },
     "Perpetua:Perpétua": {
-        "whitakers": (
-            "carries no martyr Perpetua and reads the name as the adjective perpetuus"
-        ),
+        "whitakers": ("carries no martyr Perpetua and reads the name as the adjective perpetuus"),
         "collatinus": (
             "likewise heads only perpetuus/perpetuum; neither lexicon carries her, so the "
             "parse stands on the edition alone"
@@ -271,7 +269,9 @@ def compare(text_id: str, word: dict) -> Verdict:
 
     contradictions = [f"{d}" for v, d in votes.values() if v == "CONTRADICTS"]
     if contradictions:
-        return Verdict(ref, "DIVERGE", detail=f"ours={our_pos}:{ours} | " + " | ".join(contradictions))
+        return Verdict(
+            ref, "DIVERGE", detail=f"ours={our_pos}:{ours} | " + " | ".join(contradictions)
+        )
 
     confirming = [name for name, (v, _) in votes.items() if v == "CONFIRMS"]
     if confirming:
