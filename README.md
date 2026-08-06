@@ -18,10 +18,18 @@ modern Python by a two-line compatibility shim). Each analyzer votes
 separately on every token; agreement means the corpus reading appears
 among the analyzer's candidates *under the same dictionary entry*.
 
-Liturgical orthography (accents, *j*, ligatures, diaeresis) is normalized
-to dictionary spellings mechanically. Everything the analyzers see
-differently is recorded as data, never worked around in code: spelling
-divergences (*quotidiánus* → *cotidianus*), classification rulings
+Liturgical orthography (accents, ligatures, diaeresis) is normalized to
+dictionary spellings mechanically, and the query is per-analyzer: the
+corpus prints the consonantal i as *i*, Whitaker's dictionary heads it as
+*j* (*iube* → *jube*, *maiestátis* → *majestatis*, across a prefix seam
+too — *adiutórium* → *adjutorium*), while Collatinus folds the two
+together. Whitaker's is asked in both spellings, because its own pronoun
+tables generate *eius* where its dictionary writes *ejus*, and no pair of
+Latin words is distinguished by i against j.
+
+Everything the analyzers see differently is recorded as data, never
+worked around in code: spelling divergences (*quotidiánus* →
+*cotidianus*), classification rulings
 (*sicut* as conjunction, *amen* as interjection), lemma aliases (*a/ab*
 as two Whitaker's entries, *tecum* as its own Collatinus entry), and the
 two vocabularies of deponency (Whitaker's reports the passive *form*,

@@ -88,3 +88,18 @@ def test_ordinal_numeral_comes_back_as_adjective():
         and dict(c.features).get("gender") == "f"
     ]
     assert readings, "no ablative feminine adjective candidate for tertia"
+
+
+def test_knows_the_words_whose_consonant_is_spelled_i():
+    # This analyzer was silent on every one of these while the query folded
+    # j to i: its dictionary spells them with j. The corpus prints i
+    # (ORTHOGRAPHY.md), so the wrapper has to translate.
+    for form in ("Iesu", "iube", "maiestátis", "Adiutórium", "Ioánnem", "iustum", "Iúdica"):
+        assert candidates(form), f"{form}: no reading"
+
+
+def test_knows_the_pronoun_forms_its_tables_spell_with_i():
+    # ...and the same analyzer generates eius in i, so both spellings are
+    # asked and the union is taken.
+    for form in ("eius", "eiúsdem", "cuius", "huius"):
+        assert candidates(form), f"{form}: no reading"

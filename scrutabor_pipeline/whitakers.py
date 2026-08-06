@@ -10,7 +10,7 @@ from functools import lru_cache
 
 from whitakers_words.parser import Parser
 
-from .normalize import analyzer_query
+from .normalize import analyzer_query, whitakers_query
 
 POS = {
     "V": "verb",
@@ -98,10 +98,20 @@ def _map_features(word_type: str, raw: dict) -> dict:
 
 def candidates(form: str) -> list[Candidate]:
     """All analyzer readings of a display form, translated. Empty list means
-    the analyzer does not know the form at all."""
-    result = _parser().parse(analyzer_query(form))
+    the analyzer does not know the form at all.
+
+    Asked in BOTH spellings of the glide, because this analyzer is not
+    consistent with itself: its dictionary heads the consonant as j (jubeo,
+    majestas, Jesus — the i-form returns nothing), while its pronoun
+    inflections are generated in i (eius hits, ejus does not). No pair of
+    Latin words is distinguished by i against j — it is one sound in two
+    notations — so the union is the analyzer's real answer, and asking only
+    one way silently mutes it. It was muted on 41 tokens of this corpus
+    until 2026-08-06.
+    """
+    queries = {analyzer_query(form), whitakers_query(form)}
     out: list[Candidate] = []
-    for parsed_form in result.forms:
+    for parsed_form in [f for q in sorted(queries) for f in _parser().parse(q).forms]:
         for analysis in parsed_form.analyses.values():
             word_type = analysis.lexeme.wordType.name
             pos = POS.get(word_type)

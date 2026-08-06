@@ -1,4 +1,4 @@
-from scrutabor_pipeline.normalize import analyzer_query
+from scrutabor_pipeline.normalize import analyzer_query, whitakers_query
 
 
 def test_strips_accents_and_lowercases():
@@ -27,3 +27,30 @@ def test_liturgical_spellings_map_to_dictionary_spellings():
     # the lemma strings map too
     assert analyzer_query("quotidianus") == "cotidianus"
     assert analyzer_query("tentatio") == "temptatio"
+
+
+def test_whitakers_query_writes_the_glide_as_j():
+    # its dictionary heads the consonant as j; the i-form finds nothing
+    assert whitakers_query("Iesu") == "jesu"
+    assert whitakers_query("iube") == "jube"
+    assert whitakers_query("maiestátis") == "majestatis"
+    assert whitakers_query("cuius") == "cujus"
+    assert whitakers_query("Ioánnem") == "joannem"
+
+
+def test_whitakers_query_crosses_a_prefix_seam():
+    # ad + iuvo keeps the consonant of its simplex
+    assert whitakers_query("Adiutórium") == "adjutorium"
+    assert whitakers_query("adiúti") == "adjuti"
+
+
+def test_whitakers_query_leaves_vocalic_i_alone():
+    # the u of qu is a glide, so the i of quia has no vowel before it
+    assert whitakers_query("quia") == "quia"
+    assert whitakers_query("relíquiæ") == "reliquiae"
+    # ordinary vocalic i, wherever it stands
+    assert whitakers_query("fílii") == "filii"
+    assert whitakers_query("ita") == "ita"
+    assert whitakers_query("grátia") == "gratia"
+    # the compounds of eo have a real vowel in the same position
+    assert whitakers_query("ábiit") == "abiit"
