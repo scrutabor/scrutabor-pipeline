@@ -1,7 +1,7 @@
 # scrutabor-pipeline
 
 Verification and build machinery for the
-[Scrutabor](https://github.com/scrutabor/scrutabor-app) corpus — the
+[Scrutabor](https://github.com/scrutabor/scrutabor) corpus — the
 mechanical half of the corpus quality doctrine: *the system must know what
 it doesn't know.*
 
