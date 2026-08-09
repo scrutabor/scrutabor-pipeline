@@ -104,9 +104,11 @@ FEATURE_RULINGS: dict[str, dict[str, str]] = {
     # --- the Canon ---
     "refrigerium:refrigérii": {
         "whitakers": (
-            "gives -ium nouns only the contracted genitive singular (refrigeri) and so reads "
-            "the uncontracted refrigérii as a locative — the same paradigm gap recorded for "
-            "filius above; Collatinus confirms the genitive"
+            "carries THIS ENTRY with the contracted genitive singular alone (refrigeri) and "
+            "so reads the uncontracted refrigérii as a locative. Not a rule about -ium "
+            "nouns: the same analyzer reads Evangélii as a genitive singular. Lewis and "
+            "Short head the noun refrigerium, ii, three coordinate genitives leave a "
+            "locative no room, and Collatinus confirms the genitive"
         )
     },
     "clemens:clementíssime": {
@@ -164,10 +166,12 @@ FEATURE_RULINGS: dict[str, dict[str, str]] = {
     },
     "filius:Fílii": {
         "whitakers": (
-            "gives -ius nouns only the contracted genitive singular (fili) and "
-            "so reads filii as plural or locative; the uncontracted filii is "
-            "the genitive throughout the Vulgate and the liturgical books, and "
-            "Collatinus confirms it"
+            "carries THIS ENTRY with the contracted genitive singular alone (fili) and "
+            "so reads filii as plural or locative. Not a rule about -ius nouns: the "
+            "same analyzer reads Evangélii as a genitive singular, and does not carry "
+            "Cornelii or Laurentii at all. The uncontracted filii is the genitive "
+            "throughout the Vulgate and the liturgical books, the genitive chains of "
+            "the Canon admit nothing else, and Collatinus confirms it"
         )
     },
 }
