@@ -35,6 +35,12 @@ as two Whitaker's entries, *tecum* as its own Collatinus entry), and the
 two vocabularies of deponency (Whitaker's reports the passive *form*,
 Collatinus the active *meaning*).
 
+Dictionary identity is exact, not merely typographical. Because both
+analyzers fold case, a common word cannot by itself confirm a capitalized
+proper-name homograph: recorded cases such as the martyrs *Felicitas* and
+*Perpetua* are set aside explicitly and retain editorial-only provenance.
+The corresponding lowercase common words remain mechanically checkable.
+
 ## Usage
 
 ```bash
@@ -101,6 +107,9 @@ always with a reason in the adjacent comment):
   `LEMMA_ALIASES`;
 - a word no analyzer carries → `EXPECTED_ABSENT`, with the reason that
   will be printed.
+- a capitalized proper name that a case-blind analyzer confuses with an
+  ordinary word → `CASEFOLD_HOMOGRAPH_RULINGS`, separately for each named
+  analyzer and with the lexical reason.
 
 A new analyzer is an adapter module returning candidates in the corpus
 morph vocabulary plus a vote function in `agree.py`; nothing else changes.

@@ -148,18 +148,87 @@ def test_ruling_never_invents_a_confirmation():
     assert "no analyzer confirms" in v.detail
 
 
+def test_pressura_ruling_preserves_independent_confirmation():
+    v = compare(
+        "t",
+        word(
+            "pressúra",
+            "pressura",
+            pos="noun",
+            case="nom",
+            number="sg",
+            gender="f",
+            decl=1,
+        ),
+    )
+    assert v.verdict == "AGREE_RULED"
+    assert v.sources == "collatinus"
+    assert "whitakers set aside" in v.detail
+
+
 def test_a_ruling_does_not_cover_a_different_word():
     """Rulings are keyed to lemma AND form: they cannot leak."""
     v = compare("t", word("vestris", "vos", pos="pron", case="gen", number="pl"))
     assert v.verdict != "AGREE_RULED"
 
 
+def test_casefold_homograph_does_not_confirm_saint_felicitas():
+    v = compare(
+        "t",
+        word(
+            "Felicitáte",
+            "Felicitas",
+            pos="noun",
+            case="abl",
+            number="sg",
+            gender="f",
+            decl=3,
+        ),
+    )
+    assert v.verdict == "EDITORIAL_ONLY"
+    assert "common noun felicitas" in v.detail
+
+
+def test_casefold_homograph_does_not_confirm_saint_perpetua():
+    v = compare(
+        "t",
+        word(
+            "Perpétua",
+            "Perpetua",
+            pos="noun",
+            case="abl",
+            number="sg",
+            gender="f",
+            decl=1,
+        ),
+    )
+    assert v.verdict == "EDITORIAL_ONLY"
+    assert "martyr Perpetua" in v.detail
+
+
+def test_casefold_homograph_ruling_does_not_hide_common_noun():
+    v = compare(
+        "t",
+        word(
+            "felicitáte",
+            "felicitas",
+            pos="noun",
+            case="abl",
+            number="sg",
+            gender="f",
+            decl=3,
+        ),
+    )
+    assert v.verdict == "AGREE"
+
+
 def test_every_ruling_carries_a_reason():
-    for key, analyzers in agree.FEATURE_RULINGS.items():
-        assert analyzers, f"{key}: empty ruling"
-        for name, reason in analyzers.items():
-            assert name in ("whitakers", "collatinus"), f"{key}: unknown analyzer {name}"
-            assert len(reason) > 40, f"{key}/{name}: a ruling must argue itself"
+    for rulings in (agree.FEATURE_RULINGS, agree.CASEFOLD_HOMOGRAPH_RULINGS):
+        for key, analyzers in rulings.items():
+            assert analyzers, f"{key}: empty ruling"
+            for name, reason in analyzers.items():
+                assert name in ("whitakers", "collatinus"), f"{key}: unknown analyzer {name}"
+                assert len(reason) > 40, f"{key}/{name}: a ruling must argue itself"
 
 
 def test_declared_analyzers_follows_the_schema_cascade():

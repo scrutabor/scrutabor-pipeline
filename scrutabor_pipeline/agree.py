@@ -143,13 +143,6 @@ FEATURE_RULINGS: dict[str, dict[str, str]] = {
             "genitive of the name"
         )
     },
-    "Perpetua:Perpétua": {
-        "whitakers": ("carries no martyr Perpetua and reads the name as the adjective perpetuus"),
-        "collatinus": (
-            "likewise heads only perpetuus/perpetuum; neither lexicon carries her, so the "
-            "parse stands on the edition alone"
-        ),
-    },
     "fio:fíeri": {
         "collatinus": (
             "reads the present infinitive as an imperative; fíeri is the infinitive of fio, "
@@ -173,6 +166,41 @@ FEATURE_RULINGS: dict[str, dict[str, str]] = {
             "throughout the Vulgate and the liturgical books, the genitive chains of "
             "the Canon admit nothing else, and Collatinus confirms it"
         )
+    },
+    "pressura:pressúra": {
+        "whitakers": (
+            "misclassifies the nominative singular noun pressura as a verbal form of presso; "
+            "Collatinus confirms the noun, and the Vulgate text and surrounding syntax require "
+            "it as the subject of erit"
+        )
+    },
+}
+
+# Proper names whose normalized spelling is identical to an ordinary Latin
+# dictionary word. The analyzers are case-blind, so a formally matching parse
+# of the common noun or adjective cannot confirm the identity of the saint's
+# name. The named analyzer abstains from any opinion based on that homograph;
+# the same lowercase common word remains fully machine-checkable.
+CASEFOLD_HOMOGRAPH_RULINGS: dict[str, dict[str, str]] = {
+    "Felicitas:Felicitáte": {
+        "whitakers": (
+            "carries the common noun felicitas (happiness), not the martyr Felicitas; its "
+            "case-folded noun parse cannot establish the proper name"
+        ),
+        "collatinus": (
+            "likewise carries the common noun felicitas rather than the martyr's name; the "
+            "matching inflection does not establish lexical identity"
+        ),
+    },
+    "Perpetua:Perpétua": {
+        "whitakers": (
+            "carries no martyr Perpetua and reads the case-folded name as the adjective "
+            "perpetuus; that formal match cannot establish the proper name"
+        ),
+        "collatinus": (
+            "likewise heads only perpetuus/perpetuum, not the martyr Perpetua; its "
+            "case-folded adjective parse cannot establish lexical identity"
+        ),
     },
 }
 
@@ -259,14 +287,30 @@ def compare(text_id: str, word: dict) -> Verdict:
         "collatinus": _collatinus_vote(word, our_pos, ours),
     }
 
+    key = f"{word['lemma']}:{word['form']}"
+
+    # A case-blind dictionary match to an ordinary word does not establish a
+    # capitalized proper name. Set that named analyzer's opinion aside whether
+    # it called the common-word parse matching or contradictory; this never
+    # affects the lowercase lexeme.
+    identity_rulings = CASEFOLD_HOMOGRAPH_RULINGS.get(key, {})
+    ruled = [
+        f"{name} set aside: {reason}"
+        for name, reason in identity_rulings.items()
+        if votes.get(name, ("", ""))[0] in {"CONFIRMS", "FORM_MATCH", "CONTRADICTS"}
+    ]
+    for name in identity_rulings:
+        if votes.get(name, ("", ""))[0] in {"CONFIRMS", "FORM_MATCH", "CONTRADICTS"}:
+            votes[name] = ("ABSTAINS", "")
+
     # An adjudicated contradiction abstains instead of counting against us,
     # and the token is reported as ruled rather than as plain agreement.
-    rulings = FEATURE_RULINGS.get(f"{word['lemma']}:{word['form']}", {})
-    ruled = [
+    rulings = FEATURE_RULINGS.get(key, {})
+    ruled.extend(
         f"{name} set aside: {reason}"
         for name, reason in rulings.items()
         if votes.get(name, ("", ""))[0] == "CONTRADICTS"
-    ]
+    )
     for name in rulings:
         if votes.get(name, ("", ""))[0] == "CONTRADICTS":
             votes[name] = ("ABSTAINS", "")
