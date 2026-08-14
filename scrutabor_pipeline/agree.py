@@ -174,6 +174,32 @@ FEATURE_RULINGS: dict[str, dict[str, str]] = {
             "it as the subject of erit"
         )
     },
+    "Israel:Israël": {
+        "whitakers": (
+            "treats the indeclinable proper name as nominative or vocative only; in rédimet "
+            "Israël it is the direct object and therefore accusative, while Collatinus leaves "
+            "the case open"
+        )
+    },
+    "consilium:consílii": {
+        "whitakers": (
+            "offers only a locative for the uncontracted form; consílii is the genitive "
+            "singular required by boni and magni in the two litany invocations, and "
+            "Collatinus confirms it"
+        )
+    },
+    "oboediens:obœdientíssime": {
+        "whitakers": (
+            "offers only an adverb, while the form is the masculine vocative superlative "
+            "agreeing with Iesu; Collatinus confirms the adjective"
+        )
+    },
+    "zelator:zelátor": {
+        "whitakers": (
+            "has no agent noun zelator and misreads its vocative as a future passive "
+            "imperative; Collatinus confirms the noun used in apposition to Iesu"
+        )
+    },
 }
 
 # Proper names whose normalized spelling is identical to an ordinary Latin
