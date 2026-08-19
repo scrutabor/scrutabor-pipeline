@@ -14,10 +14,9 @@ from functools import lru_cache
 from . import compat
 from .normalize import analyzer_query
 
-# French morphological vocabulary -> corpus enums. Two-word tenses are
-# matched before their one-word prefixes.
+# French morphological vocabulary -> corpus enums. The one two-word tense is
+# matched first, because its own first word maps to a different tense.
 PHRASES = [
-    ("plus-que-parfait", ("tense", "plup")),
     ("futur antérieur", ("tense", "futperf")),
 ]
 
@@ -41,6 +40,16 @@ TOKENS = {
     "imparfait": ("tense", "impf"),
     "futur": ("tense", "fut"),
     "parfait": ("tense", "perf"),
+    # The pluperfect is abbreviated in every one of the twelve morph strings
+    # that state it. The data file spells the tense out only in its trailing
+    # list of feature names, which the loader stops before reaching, so the
+    # phrase "plus-que-parfait" is never emitted and never matched.
+    "PQP": ("tense", "plup"),
+    # The gerund is its own mood in the corpus (SCHEMA.md, one ruling per
+    # token); the backend tags it by name and the tag was dropped as unmapped
+    # until 2026-08-19, so the gerund's one corpus token was confirmed on its
+    # case alone.
+    "gérondif": ("mood", "ger"),
     "indicatif": ("mood", "ind"),
     "subjonctif": ("mood", "subj"),
     "impératif": ("mood", "imp"),

@@ -29,6 +29,17 @@ def test_liturgical_spellings_map_to_dictionary_spellings():
     assert analyzer_query("tentatio") == "temptatio"
 
 
+def test_greek_loans_lose_the_y_and_regain_the_aspirate():
+    assert analyzer_query("lacrymárum") == "lacrimarum"
+    assert analyzer_query("Ierosólymis") == "hierosolymis"
+    # both sides of the identity link are folded through here
+    assert analyzer_query("lacryma") == "lacrima"
+    assert analyzer_query("Ierosolyma") == "hierosolyma"
+    # the restored aspirate moves the i off the head of the word, so the
+    # glide rule leaves it vocalic — which is how the dictionary spells it
+    assert whitakers_query("Ierosólymis") == "hierosolymis"
+
+
 def test_whitakers_query_writes_the_glide_as_j():
     # its dictionary heads the consonant as j; the i-form finds nothing
     assert whitakers_query("Iesu") == "jesu"

@@ -16,10 +16,21 @@ LIGATURES = {"æ": "ae", "œ": "oe", "Æ": "Ae", "Œ": "Oe", "ǽ": "ae", "Ǽ": "
 
 # Liturgical spellings whose dictionary heads differ — recorded here so the
 # divergence is expected, never silent. Applied as prefix rewrites so every
-# inflected form maps: quotidiánum -> cotidianum.
+# inflected form maps: quotidiánum -> cotidianum. They are matched after the
+# query has been lowercased and its j folded to i, which is why every key is
+# written in lowercase i-spelling.
 SPELLING_PREFIXES = [
     ("quotidian", "cotidian"),
     ("tentati", "temptati"),
+    # Greek loans the liturgical books write with y, the second without the
+    # aspirate its dictionary head keeps. Whitaker's returns NOTHING for
+    # either liturgical spelling and reads both rewritten ones, so lacrymárum
+    # and Ierosólymis rested on Collatinus alone until 2026-08-19. Collatinus
+    # heads the y-spellings itself; the rewrite moves it to the same word's
+    # other head, and our own lemma is folded through here too, so the
+    # identity link is made on both sides at once.
+    ("lacrym", "lacrim"),
+    ("ierosolym", "hierosolym"),
 ]
 
 

@@ -112,7 +112,7 @@ def main(argv: list[str]) -> int:
             "FORM_ABSENT",
         )
     )
-    breakdown = " ".join(f"{k}={n}" for k, n in sorted(by_sources.items()))
+    breakdown = " ".join(f"{k or 'none'}={n}" for k, n in sorted(by_sources.items()))
     for line in provenance:
         print(f"PROVENANCE      {line}")
     # TWO FAILURE MODES, told apart on purpose.

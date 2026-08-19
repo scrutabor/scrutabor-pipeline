@@ -1,3 +1,6 @@
 .venv/
 __pycache__/
 review-queue.json
+# setuptools leaves these when the package is pip-installed from the tree
+build/
+*.egg-info/

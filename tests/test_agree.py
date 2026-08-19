@@ -274,3 +274,22 @@ def test_declared_analyzers_still_reads_the_older_shape():
         declared_analyzers({"analysis_defaults": {"sources": ["editorial"]}}, {"form": "x"})
         == set()
     )
+
+
+def test_an_unaliased_discriminated_lemma_gets_a_verdict_not_a_crash():
+    """A homograph discriminator without its LEMMA_ALIASES entry is the shape
+    that killed the whole report from 2026-08-18 (liber_volumen): the raw
+    underscore key reached Whitaker's as a word and the comparison raised.
+    One bad token must cost that token its lemma link, never the report.
+    """
+    from scrutabor_pipeline.agree import compare, link_spellings
+
+    assert link_spellings("panis_cibus") == ()
+    word = {
+        "id": "w001",
+        "form": "panem",
+        "lemma": "panis_cibus",
+        "morph": {"pos": "noun", "case": "acc", "number": "sg", "gender": "m"},
+    }
+    verdict = compare("test.text", word)
+    assert verdict.verdict in {"AGREE_FORM_ONLY", "EDITORIAL_ONLY", "FORM_ABSENT", "DIVERGE"}

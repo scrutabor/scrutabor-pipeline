@@ -57,6 +57,10 @@ LEMMA_ALIASES: dict[str, tuple[str, ...]] = {
     # so the agreement report and the review queue could not be produced at
     # all from 2026-08-18, the day that text landed.
     "liber_volumen": ("liber",),
+    # Collatinus dictionaries the fused id+ipsum as one lemma (as it does
+    # tecum, three lines up); the corpus lemmatizes the pronoun under idem
+    # and lets the fusion be the form's business.
+    "idem": ("idem", "idipsum"),
     "memini": ("memini", "memento"),  # Collatinus heads the imperative itself
     # Collatinus heads the adjective under its archaic nominative saluos,
     # which the u/v fold of salvus (saluus) cannot reach. Both analyzers
@@ -64,9 +68,28 @@ LEMMA_ALIASES: dict[str, tuple[str, ...]] = {
     "salvus": ("salvus", "salvos"),
 }
 
+
+def link_spellings(lemma: str) -> tuple[str, ...]:
+    """The dictionary spellings a lemma may be linked under.
+
+    A discriminated key (liber_volumen) is the corpus's own notation, not a
+    Latin word, and SCHEMA.md requires it to carry an alias above. When the
+    alias is missing, the honest answer is NO spellings: the analyzers then
+    fail to link the lemma and the verdict says so — instead of the raw
+    underscore key reaching Whitaker's as a word and the whole report dying
+    on it, which is how the machine sat unrunnable from 2026-08-18 while
+    thirty texts landed, and how it would have died again on the next such
+    key with only the one alias added.
+    """
+    if lemma in LEMMA_ALIASES:
+        return LEMMA_ALIASES[lemma]
+    if "_" in lemma:
+        return ()
+    return (lemma,)
+
+
 # Lemmas no analyzer carries, each with the reason. An absent form under one
-# of these is expected, not a finding. (Currently empty: Collatinus knows
-# even the Hebrew proper names of the prayers.)
+# of these is expected, not a finding.
 EXPECTED_ABSENT: dict[str, str] = {
     # Martyrs of the Canon whose names are in neither analyzer's lexicon. The
     # genitive of each is secure from the chain of genitives it stands in;
@@ -137,18 +160,6 @@ FEATURE_RULINGS: dict[str, dict[str, str]] = {
             "tense would have satisfied both analyzers by claiming less than is known"
         )
     },
-    "Linus:Lini": {
-        "whitakers": (
-            "carries no pope Linus — only linum (flax) and lino — and so reads the name as a "
-            "neuter noun; Collatinus heads Linus and confirms the genitive"
-        )
-    },
-    "Clemens:Cleméntis": {
-        "whitakers": (
-            "carries only the adjective clemens, not the pope's name; Collatinus confirms the "
-            "genitive of the name"
-        )
-    },
     "fio:fíeri": {
         "collatinus": (
             "reads the present infinitive as an imperative; fíeri is the infinitive of fio, "
@@ -182,9 +193,12 @@ FEATURE_RULINGS: dict[str, dict[str, str]] = {
     },
     "Israel:Israël": {
         "whitakers": (
-            "treats the indeclinable proper name as nominative or vocative only; in rédimet "
-            "Israël it is the direct object and therefore accusative, while Collatinus leaves "
-            "the case open"
+            "treats the indeclinable proper name as nominative or vocative only; the corpus "
+            "reads it in the case its own syntax requires — the object of rédimet in the "
+            "psalm, and plebis tuæ Israël standing in apposition to a genitive in the Advent "
+            "alleluia — while Collatinus leaves the case open. The reason once argued only "
+            "the accusative and the ruling outgrew it; it is a rule about the analyzer's "
+            "closed case list, not about one verse"
         )
     },
     "consilium:consílii": {
@@ -206,6 +220,109 @@ FEATURE_RULINGS: dict[str, dict[str, str]] = {
             "imperative; Collatinus confirms the noun used in apposition to Iesu"
         )
     },
+    # --- the Advent divergences, adjudicated 2026-08-19 ---
+    # Nineteen tokens sat in the review queue from the day the machine came
+    # back up. Read against the grammar and the analyzers' live output, every
+    # one is a case where the edition is right and a dictionary is short.
+    "meus:meus": {
+        "whitakers": (
+            "offers only the nominative; Deus meus is the Psalter's address (Ps 21:2 and "
+            "throughout), the possessive standing in the vocative beside the "
+            "nominative-for-vocative Deus, where the classical paradigm's mi never appears "
+            "in these books"
+        ),
+        "collatinus": (
+            "the same: nominative alone, the classical mi expected for the vocative. The "
+            "form of address the liturgy actually prints is meus, at every one of its "
+            "occurrences here"
+        ),
+    },
+    "Ierusalem:Ierúsalem": {
+        "whitakers": (
+            "heads the city neuter (the Hierosolyma, -orum tradition) and contradicts the "
+            "feminine; the indeclinable singular name is feminine in the scriptures' own "
+            "concord — quæ occídis prophétas (Mt 23:37) — and in the vocative here "
+            "(Ierúsalem, surge)"
+        )
+    },
+    "solatium:solátii": {
+        "whitakers": (
+            "the contracted-genitive defect of refrigérii and consílii above, at another "
+            "-ium noun: it carries the entry with the contracted genitive alone and reads "
+            "the uncontracted solátii as a locative. Deus patiéntiæ et solátii is a pair "
+            "of coordinate genitives, and Collatinus confirms the second"
+        )
+    },
+    "imperium:impérii": {
+        "whitakers": (
+            "the same contracted-genitive defect: anno quintodécimo impérii Tibérii "
+            "Cǽsaris is a chain of genitives dating the year, and a locative has no place "
+            "in it. Collatinus confirms the genitive"
+        )
+    },
+    "Tiberius:Tibérii": {
+        "whitakers": (
+            "the same defect on the emperor's name: it reads the uncontracted genitive as "
+            "a locative or a plural. One Tiberius, whose reign the verse dates; Collatinus "
+            "confirms the genitive singular"
+        )
+    },
+    "exeo:exístis": {
+        "whitakers": (
+            "reads the form as a present of exsisto; exístis in Mt 11:7-9 (quid exístis "
+            "in desértum vidére) is the contracted perfect of exeo — exi(v)istis, 'what "
+            "went ye out to see' — as the received rendering of every age has it, and "
+            "Collatinus confirms exactly that: exeo, perfect, second plural"
+        )
+    },
+    "Sion:Sion": {
+        "collatinus": (
+            "enumerates the indeclinable name in three cases only (nominative, vocative, "
+            "accusative); the Psalter's own constructions put it in the rest — ex Sion an "
+            "ablative, pópulus Sion a genitive. An indeclinable serves every case, and a "
+            "closed list of three is the dictionary's economy, not the word's limit"
+        )
+    },
+    "manifeste:maniféste": {
+        "whitakers": (
+            "carries only the adjective manifestus, whose vocative shares this surface; "
+            "between subject and verb (Deus maniféste véniet) the word is the adverb in "
+            "-e, which Collatinus heads and confirms"
+        )
+    },
+    "idem:idípsum": {
+        "whitakers": (
+            "offers only its adverb idipsum ('at once', the Ps 4:9 idiom); in det vobis "
+            "idípsum sápere (Rom 15:5) the fused id+ipsum is the object of sápere — 'to "
+            "mind the same thing' — the pronoun, as the whole exegetical tradition of ut "
+            "idem sapiátis reads it. Collatinus dictionaries the fusion itself (aliased "
+            "above)"
+        )
+    },
+    "alteruter:altérutrum": {
+        "whitakers": (
+            "files the compound under adjective and adverb; the corpus files the "
+            "uter-compounds as pronouns, as it files uter and alter themselves, and in "
+            "altérutrum (Rom 15:5) is the pronoun after in. Collatinus confirms the "
+            "accusative neuter under the same head"
+        )
+    },
+    "credo:credéndo": {
+        "whitakers": (
+            "models the gerund as its gerundive and returns future passive readings; in "
+            "credéndo (Rom 15:13) is the ablative gerund — believing, not to-be-believed "
+            "— the reading SCHEMA.md's own gerund note reserves a ruling for. Collatinus "
+            "confirms the ablative under credo"
+        )
+    },
+    "Annas:Anna": {
+        "whitakers": (
+            "knows the surface only as the imperative of annáre, to swim toward — a "
+            "caseless homograph, not the high priest (Lc 3:2). The name declines Annas, "
+            "Annæ like the Greek masculines beside it in the verse, and the ablative "
+            "stands in the same absolute as Cáipha two words on"
+        )
+    },
 }
 
 # Proper names whose normalized spelling is identical to an ordinary Latin
@@ -222,6 +339,33 @@ CASEFOLD_HOMOGRAPH_RULINGS: dict[str, dict[str, str]] = {
         "collatinus": (
             "likewise carries the common noun felicitas rather than the martyr's name; the "
             "matching inflection does not establish lexical identity"
+        ),
+    },
+    # Moved here from FEATURE_RULINGS on 2026-08-19: their old reasons credited
+    # Collatinus with "confirming the name" on the strength of the very
+    # common-word homographs this table exists to refuse — its Lini candidates
+    # are the flax words, its Clemens the adjective. The standard is one
+    # standard: a case-folded common word establishes no saint's name, from
+    # either analyzer, and the parses rest on the edition (the genitives are
+    # secure from the chain of genitives each stands in).
+    "Linus:Lini": {
+        "whitakers": (
+            "carries no pope Linus — only linum (flax) and lino — and reads the case-folded "
+            "name as one of them; that match cannot establish the proper name"
+        ),
+        "collatinus": (
+            "likewise heads only lino, linum and their kin at this surface; a flax-word "
+            "parse cannot establish the pope's name"
+        ),
+    },
+    "Clemens:Cleméntis": {
+        "whitakers": (
+            "carries only the adjective clemens, not the pope's name; the adjective's "
+            "genitive cannot establish it"
+        ),
+        "collatinus": (
+            "likewise offers the adjective clemens (and clementia); the same formal match "
+            "the rule above refuses from Whitaker's cannot count as the name from here"
         ),
     },
     "Perpetua:Perpétua": {
@@ -283,7 +427,7 @@ def _whitakers_vote(word: dict, our_pos: str, ours: dict) -> tuple[str, str]:
         return "CONTRADICTS", f"whitakers proposes {proposals[:6]}"
     ids = {
         c.lexeme_id
-        for spelling in LEMMA_ALIASES.get(word["lemma"], (word["lemma"],))
+        for spelling in link_spellings(word["lemma"])
         for c in whitakers.lemma_candidates(spelling)
         if _pos_match(our_pos, c.pos)
     }
@@ -300,10 +444,7 @@ def _collatinus_vote(word: dict, our_pos: str, ours: dict) -> tuple[str, str]:
     if not matching:
         proposals = sorted({f"{c.lemma}:{c.feature_dict()}" for c in cands})
         return "CONTRADICTS", f"collatinus proposes {proposals[:6]}"
-    accepted = {
-        collatinus.fold_lemma(spelling)
-        for spelling in LEMMA_ALIASES.get(word["lemma"], (word["lemma"],))
-    }
+    accepted = {collatinus.fold_lemma(spelling) for spelling in link_spellings(word["lemma"])}
     if any(c.lemma in accepted for c in matching):
         return "CONFIRMS", ""
     return "FORM_MATCH", f"collatinus reads it under {sorted({c.lemma for c in matching})[:4]}"

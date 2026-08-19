@@ -13,12 +13,14 @@ from whitakers_words.parser import Parser
 from .normalize import analyzer_query, whitakers_query
 
 POS = {
+    # Participles arrive under this key too, and there is no VPAR entry
+    # because a LEXEME is never VPAR: that word type belongs to the
+    # INFLECTION, and no stem or unique in the port's data carries it. What
+    # a VPAR inflection does carry is case, number, gender, tense and voice
+    # and no Mood, so the candidate's mood stays open and matches the
+    # corpus's mood "part", while a finite candidate (whose mood IS stated)
+    # cannot.
     "V": "verb",
-    # Participles are verb tokens in the corpus (mood "part"); Whitaker's
-    # heads them as their own word type. Its VPAR inflections carry no
-    # Mood feature, so the candidate's mood stays open and matches "part",
-    # while finite V candidates (whose mood IS stated) cannot.
-    "VPAR": "verb",
     "N": "noun",
     "ADJ": "adj",
     # Whitaker's separates numerals from adjectives; the corpus tags
@@ -53,7 +55,7 @@ TENSE = {
 }
 MOOD = {"IND": "ind", "SUB": "subj", "IMP": "imp", "INF": "inf"}
 VOICE = {"ACTIVE": "act", "PASSIVE": "pass"}
-DEGREE = {"COMP": "comp", "SUP": "sup"}  # POS (positive) -> absent, like the corpus
+DEGREE = {"COMP": "comp", "SUPER": "sup"}  # POS (positive) -> absent, like the corpus
 
 
 @dataclass(frozen=True)
@@ -79,7 +81,7 @@ def _parser() -> Parser:
     return Parser(frequency="E")
 
 
-def _map_features(word_type: str, raw: dict) -> dict:
+def _map_features(raw: dict) -> dict:
     out: dict = {}
     for key, value in raw.items():
         name = getattr(value, "name", str(value))
@@ -125,7 +127,7 @@ def candidates(form: str) -> list[Candidate]:
             if pos is None:
                 continue
             for inflection in analysis.inflections:
-                mapped = _map_features(word_type, inflection.features)
+                mapped = _map_features(inflection.features)
                 out.append(
                     Candidate(
                         lexeme_id=analysis.lexeme.id,

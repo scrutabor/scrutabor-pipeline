@@ -22,7 +22,11 @@ def test_an_unambiguous_form_counts_once():
 
 
 def test_a_form_the_analyzer_does_not_know_counts_zero():
-    # Melchísedech is one of the 50 forms Whitaker's carries no entry for —
-    # mostly proper names of the Canon's saints, plus a handful of syncopated
-    # perfects. They are counted apart from the ambiguous ones, not with them.
+    # Melchísedech is one of the 70 forms — 95 tokens — Whitaker's carries no
+    # entry for: mostly proper names of the Canon's saints, plus a handful of
+    # syncopated perfects. They are counted apart from the ambiguous ones, not
+    # with them. The figure is a measurement, not a constant: this comment
+    # said 50 while the measure said 72 forms and 97 tokens, and the spelling
+    # table took two of those away on 2026-08-19. Retake it, never recall it
+    # — `python -m scrutabor_pipeline.ambiguity ../scrutabor-corpus` prints it.
     assert parses("Melchísedech") == set()
