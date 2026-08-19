@@ -3,7 +3,7 @@
 Verification and build machinery for the
 [Scrutabor](https://github.com/scrutabor/scrutabor) corpus — the
 mechanical half of the corpus quality doctrine: *the system must know what
-it doesn't know.*
+it doesn't know.* The reader lives at [scrutabor.org](https://scrutabor.org).
 
 ## Source agreement
 
@@ -120,3 +120,11 @@ has to be *seen* caught (`tests/test_agree.py` keeps the proof).
 
 [AGPL-3.0](LICENSE). The corpus data this pipeline verifies is
 CC BY-SA 4.0 in its own repository.
+
+The analyzers keep their own licenses: the
+[Python port of Whitaker's Words](https://github.com/blagae/whitakers_words)
+is MIT, and [pycollatinus](https://github.com/PonteIneptique/collatinus-python)
+is GPL-3.0, as is the Collatinus lexical data it carries — its PyPI
+metadata says "GNU GPL v2", but the license the source repository declares
+is GPL v3, matching Collatinus itself. Both are compatible with this
+repository's AGPL-3.0.
