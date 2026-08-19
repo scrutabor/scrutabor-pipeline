@@ -231,10 +231,34 @@ def test_every_ruling_carries_a_reason():
                 assert len(reason) > 40, f"{key}/{name}: a ruling must argue itself"
 
 
-def test_declared_analyzers_follows_the_schema_cascade():
-    """A word's own analysis wins; else the document's word default; else
-    the document default. Only analyzer names count — 'editorial' is our
-    own work and a witness id is not a vote about morphology."""
+def test_declared_analyzers_reads_the_corpus_as_it_is_stored():
+    """The shape schema 0.14.0 actually writes: one document per text with
+    every editorial claim under `editorial`.
+
+    This test built the PRE-0.14.0 shape until 2026-08-19 and passed for
+    months against a corpus that had stopped existing — so the report it
+    guards silently found that no word claimed any analyzer, and no gate
+    said a word. A fixture that describes a shape nobody writes is not a
+    test, it is a second opinion about the past.
+    """
+    from scrutabor_pipeline.agreement import declared_analyzers
+
+    doc = {
+        "editorial": {
+            "analysis_defaults": {"sources": ["editorial"]},
+            "analysis_defaults_words": {"sources": ["editorial", "whitakers", "collatinus"]},
+            "words": {"w001": {"analysis": {"sources": ["editorial", "collatinus"]}}},
+        }
+    }
+    assert declared_analyzers(doc, {"id": "w002", "form": "x"}) == {"whitakers", "collatinus"}
+    assert declared_analyzers(doc, {"id": "w001", "form": "x"}) == {"collatinus"}
+    bare = {"editorial": {"analysis_defaults": {"sources": ["editorial"]}}}
+    assert declared_analyzers(bare, {"id": "w001", "form": "x"}) == set()
+
+
+def test_declared_analyzers_still_reads_the_older_shape():
+    """The pipeline is not versioned with the corpus and may be pointed at an
+    older checkout, so the pre-0.14.0 cascade is still honoured."""
     from scrutabor_pipeline.agreement import declared_analyzers
 
     doc = {

@@ -24,3 +24,18 @@ jobs:
       - run: ruff format --check .
       - run: mypy
       - run: python -m pytest
+      # The agreement machine must RUN, against a real corpus, on every push.
+      # It had been down since 2026-08-18 -- an unhandled exception on one
+      # word of the Advent IV gospel -- and nothing said so: no workflow
+      # invoked it, and the corpus grew by thirty texts while the machinery
+      # behind "the system must know what it doesn't know" produced nothing
+      # at all. Every gate stayed green throughout. A pipeline that cannot be
+      # run is a red build now, not a quiet one.
+      #
+      # The corpus is public, so a shallow clone of its main is the honest
+      # input: this asks whether the pipeline works, not whether the corpus
+      # is perfect, so the verdict's own exit code is what fails the step.
+      - name: the agreement machine runs against the corpus
+        run: |
+          git clone --depth 1 https://github.com/scrutabor/scrutabor-corpus.git /tmp/corpus
+          python -m scrutabor_pipeline.agreement /tmp/corpus

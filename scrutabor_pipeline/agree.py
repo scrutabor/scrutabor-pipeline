@@ -51,6 +51,12 @@ LEMMA_ALIASES: dict[str, tuple[str, ...]] = {
     # Homograph discriminators (corpus SCHEMA.md): the key carries the part of
     # speech, the analyzers are asked about the word itself.
     "hic_adverbium": ("hic",),
+    # The Advent IV gospel's `in libro`, discriminated from liber the adjective
+    # (free). Without the alias the underscore key reached Whitaker's as a
+    # word, and the whole comparison raised rather than returning a verdict --
+    # so the agreement report and the review queue could not be produced at
+    # all from 2026-08-18, the day that text landed.
+    "liber_volumen": ("liber",),
     "memini": ("memini", "memento"),  # Collatinus heads the imperative itself
     # Collatinus heads the adjective under its archaic nominative saluos,
     # which the u/v fold of salvus (saluus) cannot reach. Both analyzers
