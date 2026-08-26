@@ -315,6 +315,38 @@ FEATURE_RULINGS: dict[str, dict[str, str]] = {
             "confirms the ablative under credo"
         )
     },
+    "pecco:peccándo": {
+        "whitakers": (
+            "models this gerund as its gerundive and returns future passive readings; "
+            "peccándo names the act by which the speaker deserved punishment and offended "
+            "God, so it is the ablative gerund, not a future passive participle. Collatinus "
+            "confirms the ablative gerund under pecco"
+        )
+    },
+    "pecco:peccandíque": {
+        "whitakers": (
+            "models the enclitic-bearing gerund as its gerundive and returns future passive "
+            "readings; peccandí is the genitive gerund governed by occasiones, while -que "
+            "coordinates the second object of the resolution. Collatinus confirms the "
+            "genitive gerund under pecco"
+        )
+    },
+    "summus:summum": {
+        "whitakers": (
+            "offers noun readings alone, but summum directly modifies the substantival "
+            "neuter bonum in summum bonum, both standing in accusative apposition to te. "
+            "The agreement and phrase syntax require the superlative adjective, which "
+            "Collatinus confirms under summus"
+        )
+    },
+    "proximus:próximas": {
+        "whitakers": (
+            "offers only the second-person verb proximo, but próximas agrees with the "
+            "feminine accusative plural noun occasiónes in the established phrase "
+            "occasiones proximas. The syntax requires the adjective, which Collatinus "
+            "confirms under proximus"
+        )
+    },
     "Annas:Anna": {
         "whitakers": (
             "knows the surface only as the imperative of annáre, to swim toward — a "

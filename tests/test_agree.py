@@ -166,6 +166,57 @@ def test_pressura_ruling_preserves_independent_confirmation():
     assert "whitakers set aside" in v.detail
 
 
+def test_actus_contritionis_rulings_preserve_independent_confirmation():
+    examples = (
+        word(
+            "peccándo",
+            "pecco",
+            pos="verb",
+            case="abl",
+            number="sg",
+            gender="n",
+            tense="pres",
+            mood="ger",
+            voice="act",
+            conj=1,
+        ),
+        word(
+            "peccandíque",
+            "pecco",
+            pos="verb",
+            case="gen",
+            number="sg",
+            gender="n",
+            tense="pres",
+            mood="ger",
+            voice="act",
+            conj=1,
+        ),
+        word(
+            "summum",
+            "summus",
+            pos="adj",
+            case="acc",
+            number="sg",
+            gender="n",
+            degree="sup",
+        ),
+        word(
+            "próximas",
+            "proximus",
+            pos="adj",
+            case="acc",
+            number="pl",
+            gender="f",
+        ),
+    )
+    for example in examples:
+        verdict = compare("t", example)
+        assert verdict.verdict == "AGREE_RULED"
+        assert verdict.sources == "collatinus"
+        assert "whitakers set aside" in verdict.detail
+
+
 def test_a_ruling_does_not_cover_a_different_word():
     """Rulings are keyed to lemma AND form: they cannot leak."""
     v = compare("t", word("vestris", "vos", pos="pron", case="gen", number="pl"))
