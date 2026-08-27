@@ -89,6 +89,21 @@ def test_subjunctive_agrees():
     assert v.verdict == "AGREE"
 
 
+def test_lowercase_martyrum_uses_the_reviewed_number_ruling():
+    v = compare(
+        "t",
+        word("mártyrum", "martyr", pos="noun", case="gen", number="pl", gender="m", decl=3),
+    )
+    assert v.verdict == "AGREE_RULED"
+    assert v.sources == "collatinus"
+
+
+def test_nostri_as_personal_pronoun_is_not_misread_as_possessive():
+    v = compare("t", word("nostri", "nos", pos="pron", case="gen", number="pl"))
+    assert v.verdict == "AGREE_RULED"
+    assert v.sources == "whitakers"
+
+
 def test_spelling_mapped_lemma_agrees():
     v = compare(
         "t",

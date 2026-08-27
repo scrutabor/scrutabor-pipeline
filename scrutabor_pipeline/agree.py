@@ -130,6 +130,12 @@ FEATURE_RULINGS: dict[str, dict[str, str]] = {
             "confirms it"
         )
     },
+    "nos:nostri": {
+        "collatinus": (
+            "links the form only to the possessive noster; nostri is also the "
+            "genitive of nos, which is what misereor governs in miserere nostri"
+        )
+    },
     # --- the Canon ---
     "refrigerium:refrigérii": {
         "whitakers": (
@@ -147,6 +153,13 @@ FEATURE_RULINGS: dict[str, dict[str, str]] = {
         )
     },
     "martyr:Mártyrum": {
+        "whitakers": (
+            "returns genitive SINGULAR for mártyrum, a number the form cannot carry (the "
+            "genitive singular is mártyris) — a porting artefact; Collatinus gives the "
+            "genitive plural the series of plural genitives requires"
+        )
+    },
+    "martyr:mártyrum": {
         "whitakers": (
             "returns genitive SINGULAR for mártyrum, a number the form cannot carry (the "
             "genitive singular is mártyris) — a porting artefact; Collatinus gives the "
