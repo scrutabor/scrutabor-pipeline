@@ -16,12 +16,16 @@ confirmed each token, and comparing that against what the corpus claims
 costs nothing. Reported as `provenance_mismatch=N`.
 """
 
+import argparse
+import hashlib
+import importlib.metadata
 import json
+import subprocess
 import sys
 from collections import Counter
 from pathlib import Path
 
-from .agree import compare
+from .agree import Verdict, compare
 
 # Sources that are not analyzers: our own work, and the witnesses, whose
 # names this report has no opinion about.
@@ -57,6 +61,7 @@ def declared_analyzers(doc: dict, word: dict) -> set[str]:
 def run(corpus: Path):
     verdicts = []
     provenance = []
+    confirmations = []
     texts = 0
     for text_path in sorted(corpus.glob("texts/*/*.json")):
         doc = json.loads(text_path.read_text(encoding="utf-8"))
@@ -67,22 +72,136 @@ def run(corpus: Path):
                 verdicts.append(verdict)
                 claimed = declared_analyzers(doc, word)
                 confirming = {s for s in verdict.sources.split("+") if s in ANALYZERS}
+                confirmations.append(
+                    {
+                        "token": verdict.token_ref,
+                        "verdict": verdict.verdict,
+                        "declared": sorted(claimed),
+                        "confirmed": sorted(confirming),
+                    }
+                )
                 if claimed != confirming:
                     provenance.append(
                         f"{verdict.token_ref}: claims {sorted(claimed) or ['-']}, "
                         f"confirmed by {sorted(confirming) or ['-']}"
                     )
-    return texts, verdicts, provenance
+    return texts, verdicts, provenance, confirmations
+
+
+def corpus_identity(corpus: Path) -> dict[str, str | None]:
+    digest = hashlib.sha256()
+    for path in sorted(corpus.glob("texts/*/*.json")):
+        digest.update(str(path.relative_to(corpus)).encode())
+        digest.update(b"\0")
+        digest.update(path.read_bytes())
+    try:
+        commit = subprocess.check_output(
+            ["git", "-C", str(corpus), "rev-parse", "HEAD"], text=True
+        ).strip()
+    except (FileNotFoundError, subprocess.CalledProcessError):
+        commit = None
+    return {"commit": commit, "texts_sha256": digest.hexdigest()}
+
+
+def pipeline_identity() -> dict[str, str | bool | None]:
+    root = Path(__file__).resolve().parent.parent
+    digest = hashlib.sha256()
+    for path in sorted((root / "scrutabor_pipeline").glob("*.py")):
+        digest.update(path.name.encode())
+        digest.update(b"\0")
+        digest.update(path.read_bytes())
+    try:
+        commit = subprocess.check_output(
+            ["git", "-C", str(root), "rev-parse", "HEAD"], text=True
+        ).strip()
+        dirty = bool(
+            subprocess.check_output(
+                ["git", "-C", str(root), "status", "--porcelain"], text=True
+            ).strip()
+        )
+    except (FileNotFoundError, subprocess.CalledProcessError):
+        commit = None
+        dirty = True
+    return {
+        "commit": commit,
+        "dirty": dirty,
+        "source_sha256": digest.hexdigest(),
+    }
+
+
+def package_version(name: str) -> str:
+    try:
+        return importlib.metadata.version(name)
+    except importlib.metadata.PackageNotFoundError:
+        return "unknown"
+
+
+def confirmation_attestation(
+    corpus: Path,
+    texts: int,
+    verdicts: list[Verdict],
+    provenance: list[str],
+    confirmations: list[dict],
+    *,
+    include_confirmations: bool = False,
+) -> dict:
+    root = hashlib.sha256(
+        json.dumps(
+            confirmations,
+            ensure_ascii=False,
+            sort_keys=True,
+            separators=(",", ":"),
+        ).encode()
+    ).hexdigest()
+    groups = Counter(
+        (
+            "+".join(row["declared"]) or "none",
+            "+".join(row["confirmed"]) or "none",
+            row["verdict"],
+        )
+        for row in confirmations
+    )
+    return {
+        "schema_version": "1.0.0",
+        "corpus": corpus_identity(corpus),
+        "pipeline": pipeline_identity(),
+        "analyzers": {
+            "whitakers": package_version("whitakers-words"),
+            "collatinus": package_version("pycollatinus"),
+        },
+        "counts": {
+            "texts": texts,
+            "tokens": len(verdicts),
+            "provenance_mismatch": len(provenance),
+            "by_verdict": dict(sorted(Counter(v.verdict for v in verdicts).items())),
+        },
+        "confirmations_sha256": root,
+        "confirmation_groups": [
+            {
+                "declared": declared,
+                "confirmed": confirmed,
+                "verdict": verdict,
+                "tokens": count,
+            }
+            for (declared, confirmed, verdict), count in sorted(groups.items())
+        ],
+        "mismatches": provenance,
+        **({"confirmations": confirmations} if include_confirmations else {}),
+    }
 
 
 def main(argv: list[str]) -> int:
-    strict = "--strict" in argv
-    argv = [a for a in argv if a != "--strict"]
-    if len(argv) != 2:
-        print("usage: python -m scrutabor_pipeline.agreement [--strict] <corpus-path>")
-        return 2
-    corpus = Path(argv[1])
-    texts, verdicts, provenance = run(corpus)
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--strict", action="store_true")
+    parser.add_argument("--attestation", type=Path)
+    parser.add_argument("--attestation-details", action="store_true")
+    parser.add_argument("corpus", type=Path)
+    try:
+        args = parser.parse_args(argv[1:])
+    except SystemExit as error:
+        return error.code if isinstance(error.code, int) else 2
+    corpus = args.corpus
+    texts, verdicts, provenance, confirmations = run(corpus)
     if not verdicts:
         print("VERDICT FAIL tokens=0 — refusing to pass on zero")
         return 2
@@ -100,6 +219,21 @@ def main(argv: list[str]) -> int:
     ]
     queue_path = Path("review-queue.json")
     queue_path.write_text(json.dumps(queue, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+
+    if args.attestation:
+        attestation = confirmation_attestation(
+            corpus,
+            texts,
+            verdicts,
+            provenance,
+            confirmations,
+            include_confirmations=args.attestation_details,
+        )
+        args.attestation.parent.mkdir(parents=True, exist_ok=True)
+        args.attestation.write_text(
+            json.dumps(attestation, ensure_ascii=False, indent=2) + "\n",
+            encoding="utf-8",
+        )
 
     subject = " ".join(
         f"{k.lower()}={counts.get(k, 0)}"
@@ -127,12 +261,12 @@ def main(argv: list[str]) -> int:
     # so it is opt-in: this workflow is pointed at whatever corpus main holds,
     # and a repository should not go red for another repository's content. The
     # corpus's own release ritual is where --strict belongs.
-    ok = "OK" if not (strict and provenance) else "FAIL"
+    ok = "OK" if not (args.strict and provenance) else "FAIL"
     print(
         f"VERDICT {ok} texts={texts} tokens={len(verdicts)} {subject} [{breakdown}] "
         f"queue={len(queue)} provenance_mismatch={len(provenance)}"
     )
-    return 1 if (strict and provenance) else 0
+    return 1 if (args.strict and provenance) else 0
 
 
 if __name__ == "__main__":

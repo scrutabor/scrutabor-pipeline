@@ -46,6 +46,8 @@ The corresponding lowercase common words remain mechanically checkable.
 ```bash
 python -m venv .venv && .venv/bin/pip install -r requirements.txt
 .venv/bin/python -m scrutabor_pipeline.agreement path/to/scrutabor-corpus
+.venv/bin/python -m scrutabor_pipeline.agreement --strict \
+  --attestation analyzer-confirmations.json path/to/scrutabor-corpus
 ```
 
 ### Reading the report
@@ -77,6 +79,14 @@ the verdict, so a healthy run prints nothing but the verdict (or
 counts, even when divergences exist (the report is a measurement; gating
 happens where findings are adjudicated); `2` — usage error or zero tokens
 (a report that checked nothing must not pass).
+
+`--attestation` additionally writes a deterministic machine record bound to
+the corpus commit and the SHA-256 of every neutral text file. It groups the
+declared and actual confirmations, records every mismatch, and commits the
+complete per-token list by SHA-256. Add `--attestation-details` when the full
+per-token list is needed in the artifact itself. The compact release artifact
+therefore makes a zero-mismatch claim independently recheckable without
+turning a terminal log into evidence.
 
 ## Development
 
