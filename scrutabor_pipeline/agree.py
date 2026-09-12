@@ -51,6 +51,9 @@ LEMMA_ALIASES: dict[str, tuple[str, ...]] = {
     # Homograph discriminators (corpus SCHEMA.md): the key carries the part of
     # speech, the analyzers are asked about the word itself.
     "hic_adverbium": ("hic",),
+    "caligo_nomen": ("caligo",),
+    "clam_adverbium": ("clam",),
+    "supra_adverbium": ("supra",),
     # The Advent IV gospel's `in libro`, discriminated from liber the adjective
     # (free). Without the alias the underscore key reached Whitaker's as a
     # word, and the whole comparison raised rather than returning a verdict --
