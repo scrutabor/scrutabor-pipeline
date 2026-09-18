@@ -125,6 +125,32 @@ def test_lemma_alias_links_a_to_ab():
     assert "whitakers" in v.sources
 
 
+def test_outside_adverb_has_its_own_dictionary_identity():
+    v = compare("t", word("foris", "foris_adverbium", pos="adv"))
+    assert v.verdict == "AGREE"
+    assert v.sources == "whitakers+collatinus"
+    wrong = compare("t", word("foris", "foris_adverbium", pos="noun", case="acc", number="sg"))
+    assert wrong.verdict == "DIVERGE"
+
+
+def test_dedication_gerundive_can_link_its_discriminated_lemma():
+    token = word(
+        "dicánda",
+        "dico_dedicare",
+        pos="verb",
+        mood="part",
+        tense="fut",
+        voice="pass",
+        case="nom",
+        number="sg",
+        gender="f",
+        conj=1,
+    )
+    assert compare("t", token).sources == "whitakers+collatinus"
+    token["morph"]["case"] = "gen"
+    assert compare("t", token).verdict == "DIVERGE"
+
+
 def test_fused_tecum_is_linked_by_alias():
     v = compare("t", word("tecum", "tu", pos="pron", case="abl", number="sg"))
     assert v.verdict == "AGREE"

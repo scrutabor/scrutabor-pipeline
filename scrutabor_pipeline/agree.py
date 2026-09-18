@@ -54,6 +54,8 @@ LEMMA_ALIASES: dict[str, tuple[str, ...]] = {
     "caligo_nomen": ("caligo",),
     "clam_adverbium": ("clam",),
     "supra_adverbium": ("supra",),
+    "foris_adverbium": ("foris",),  # outside, distinct from foris the door
+    "dico_dedicare": ("dico",),  # dedicate, first conjugation, not dicere (say)
     # The Advent IV gospel's `in libro`, discriminated from liber the adjective
     # (free). Without the alias the underscore key reached Whitaker's as a
     # word, and the whole comparison raised rather than returning a verdict --
