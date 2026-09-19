@@ -140,15 +140,20 @@ FEATURE_RULINGS: dict[str, dict[str, str]] = {
     },
     "vos:vestri": {
         "collatinus": (
-            "links the form only to the possessive vester; vestri is also the "
-            "genitive of vos, which is what misereor governs here — Whitaker's "
-            "confirms it"
+            "vestri is a genitive plural of the personal pronoun vos, distinct from "
+            "inflections of the possessive vester. Collatinus links this form only to "
+            "the possessive. Choosing the personal pronoun is a contextual editorial "
+            "decision, not established by this ruling; confirmation still requires "
+            "another analyzer's actual vote"
         )
     },
     "nos:nostri": {
         "collatinus": (
-            "links the form only to the possessive noster; nostri is also the "
-            "genitive of nos, which is what misereor governs in miserere nostri"
+            "nostri is a genitive plural of the personal pronoun nos, distinct from "
+            "inflections of the possessive noster. Collatinus links this form only to "
+            "the possessive. Choosing the personal pronoun is a contextual editorial "
+            "decision, not established by this ruling; confirmation still requires "
+            "another analyzer's actual vote"
         )
     },
     # --- the Canon ---
