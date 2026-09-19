@@ -2,8 +2,10 @@ import hashlib
 import json
 from pathlib import Path
 
+from scrutabor_pipeline import agreement, whitakers_special
 from scrutabor_pipeline.agree import Verdict
 from scrutabor_pipeline.agreement import confirmation_attestation, corpus_identity
+from scrutabor_pipeline.whitakers_special import registry
 
 
 def test_confirmation_attestation_binds_every_token_and_corpus_bytes(tmp_path):
@@ -24,6 +26,8 @@ def test_confirmation_attestation_binds_every_token_and_corpus_bytes(tmp_path):
         corpus, 1, verdicts, [], confirmations, include_confirmations=True
     )
     assert attestation["counts"]["tokens"] == 1
+    assert attestation["analyzer_bindings"]["whitakers_special"] == registry().provenance()
+    assert attestation["analyzers"]["whitakers"]
     assert attestation["counts"]["provenance_mismatch"] == 0
     assert attestation["confirmations"] == confirmations
     assert attestation["confirmation_groups"] == [
@@ -63,3 +67,16 @@ def test_attestation_records_a_provenance_mismatch():
         ],
     )
     assert attestation["counts"]["provenance_mismatch"] == 1
+
+
+def test_attestation_exposes_inactive_special_binding_without_rewriting_results(
+    tmp_path, monkeypatch
+):
+    disabled = whitakers_special.build_registry({}, {}, [])
+    monkeypatch.setattr(agreement, "special_registry", lambda: disabled)
+    result = confirmation_attestation(tmp_path, 0, [], [], [])
+    assert result["analyzer_bindings"]["whitakers_special"] == disabled.provenance()
+    assert result["analyzer_bindings"]["whitakers_special"]["status"] == "inactive"
+    assert result["analyzers"]["whitakers"] == agreement.package_version("whitakers-words")
+    assert result["counts"]["tokens"] == 0
+    assert result["counts"]["provenance_mismatch"] == 0

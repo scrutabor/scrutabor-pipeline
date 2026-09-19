@@ -514,13 +514,13 @@ def _whitakers_vote(word: dict, our_pos: str, ours: dict) -> tuple[str, str]:
     if not matching:
         proposals = sorted({f"{c.pos}:{c.feature_dict()}" for c in cands})
         return "CONTRADICTS", f"whitakers proposes {proposals[:6]}"
-    ids = {
-        c.lexeme_id
+    identities = {
+        c.identity
         for spelling in link_spellings(word["lemma"])
         for c in whitakers.lemma_candidates(spelling)
-        if _pos_match(our_pos, c.pos)
+        if c.identity is not None and _pos_match(our_pos, c.pos)
     }
-    if ids and any(c.lexeme_id in ids for c in matching):
+    if any(c.identity in identities for c in matching):
         return "CONFIRMS", ""
     return "FORM_MATCH", f"whitakers cannot link lemma {word['lemma']!r}"
 

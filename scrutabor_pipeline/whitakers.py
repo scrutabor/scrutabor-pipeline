@@ -11,6 +11,7 @@ from functools import lru_cache
 from whitakers_words.parser import Parser
 
 from .normalize import analyzer_query, whitakers_query
+from .whitakers_special import identity as special_identity
 
 POS = {
     # Participles arrive under this key too, and there is no VPAR entry
@@ -66,6 +67,15 @@ class Candidate:
     lexeme_id: int
     pos: str
     features: tuple = field(default_factory=tuple)  # sorted (key, value) pairs
+    special_family: str | None = None
+
+    @property
+    def identity(self) -> tuple[str, int | str] | None:
+        if self.lexeme_id > 0:
+            return ("regular", self.lexeme_id)
+        if self.lexeme_id == 0 and self.special_family:
+            return ("special", self.special_family)
+        return None
 
     def feature_dict(self) -> dict:
         return dict(self.features)
@@ -133,6 +143,9 @@ def candidates(form: str) -> list[Candidate]:
                         lexeme_id=analysis.lexeme.id,
                         pos=pos,
                         features=tuple(sorted(mapped.items())),
+                        special_family=(
+                            special_identity(inflection) if analysis.lexeme.id == 0 else None
+                        ),
                     )
                 )
             if not analysis.inflections:

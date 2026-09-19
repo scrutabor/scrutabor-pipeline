@@ -26,6 +26,7 @@ from collections import Counter
 from pathlib import Path
 
 from .agree import Verdict, compare
+from .whitakers_special import registry as special_registry
 
 # Sources that are not analyzers: our own work, and the witnesses, whose
 # names this report has no opinion about.
@@ -169,6 +170,7 @@ def confirmation_attestation(
             "whitakers": package_version("whitakers-words"),
             "collatinus": package_version("pycollatinus"),
         },
+        "analyzer_bindings": {"whitakers_special": special_registry().provenance()},
         "counts": {
             "texts": texts,
             "tokens": len(verdicts),
