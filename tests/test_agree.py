@@ -125,6 +125,19 @@ def test_lemma_alias_links_a_to_ab():
     assert "whitakers" in v.sources
 
 
+def test_discriminated_homonyms_link_without_losing_their_identity():
+    for lemma, spelling in {
+        "labor_labi": "labor",
+        "mundus_purus": "mundus",
+        "inimicus_hostilis": "inimicus",
+        "adversus_prep": "adversus",
+        "sero_adverb": "sero",
+        "infernus_inferior": "infernus",
+    }.items():
+        assert agree.link_spellings(lemma) == (spelling,)
+    assert agree.link_spellings("unregistered_homonym") == ()
+
+
 def test_outside_adverb_has_its_own_dictionary_identity():
     v = compare("t", word("foris", "foris_adverbium", pos="adv"))
     assert v.verdict == "AGREE"
@@ -157,6 +170,16 @@ def test_fused_tecum_is_linked_by_alias():
 
 
 # --- adjudicated contradictions (FEATURE_RULINGS) -------------------------
+
+
+def test_accented_indeclinable_israel_dative_reports_case_limitation(monkeypatch):
+    token = word("Ísrael", "Israel", pos="noun", case="dat", number="sg", gender="m")
+    result = compare("t", token)
+    assert result.verdict == "AGREE_RULED"
+    assert result.sources == "collatinus"
+    assert "case open" in result.detail
+    monkeypatch.delitem(agree.FEATURE_RULINGS, "Israel:Ísrael")
+    assert compare("t", token).verdict == "DIVERGE"
 
 
 def test_ruling_sets_one_analyzer_aside_and_says_so():
@@ -262,6 +285,64 @@ def test_a_ruling_does_not_cover_a_different_word():
     """Rulings are keyed to lemma AND form: they cannot leak."""
     v = compare("t", word("vestris", "vos", pos="pron", case="gen", number="pl"))
     assert v.verdict != "AGREE_RULED"
+
+
+def test_summis_adjective_retains_collatinus_confirmation():
+    verdict = compare(
+        "t",
+        word("summis", "summus", pos="adj", case="dat", number="pl", gender="n", degree="sup"),
+    )
+    assert verdict.verdict == "AGREE_RULED"
+    assert verdict.sources == "collatinus"
+    assert "whitakers set aside" in verdict.detail
+
+
+def test_venerando_gerund_retains_independent_confirmation():
+    verdict = compare(
+        "t",
+        word(
+            "venerándo",
+            "veneror",
+            pos="verb",
+            case="abl",
+            number="sg",
+            gender="n",
+            tense="pres",
+            voice="act",
+            mood="ger",
+            conj=1,
+        ),
+    )
+    assert verdict.verdict == "AGREE_RULED"
+    assert verdict.sources == "collatinus"
+    assert "whitakers set aside" in verdict.detail
+
+
+def test_venerando_ruling_does_not_license_an_accusative():
+    verdict = compare(
+        "t",
+        word(
+            "venerándo",
+            "veneror",
+            pos="verb",
+            case="acc",
+            number="sg",
+            gender="n",
+            tense="pres",
+            voice="act",
+            mood="ger",
+            conj=1,
+        ),
+    )
+    assert verdict.verdict == "DIVERGE"
+
+
+def test_summis_ruling_does_not_license_an_impossible_accusative():
+    verdict = compare(
+        "t",
+        word("summis", "summus", pos="adj", case="acc", number="pl", gender="n", degree="sup"),
+    )
+    assert verdict.verdict == "DIVERGE"
 
 
 def test_casefold_homograph_does_not_confirm_saint_felicitas():

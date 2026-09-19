@@ -56,6 +56,13 @@ LEMMA_ALIASES: dict[str, tuple[str, ...]] = {
     "supra_adverbium": ("supra",),
     "foris_adverbium": ("foris",),  # outside, distinct from foris the door
     "dico_dedicare": ("dico",),  # dedicate, first conjugation, not dicere (say)
+    "labor_labi": ("labor",),  # deponent labi, not the noun laboris
+    "mundus_purus": ("mundus",),  # clean, not the noun meaning world
+    "inimicus_hostilis": ("inimicus",),  # hostile adjective, not the enemy noun
+    "adversus_prep": ("adversus",),
+    "sero_adverb": ("sero",),
+    "infernus_inferior": ("infernus",),
+    "amare_adverb": ("amare", "amarus"),
     # The Advent IV gospel's `in libro`, discriminated from liber the adjective
     # (free). Without the alias the underscore key reached Whitaker's as a
     # word, and the whole comparison raised rather than returning a verdict --
@@ -219,6 +226,15 @@ FEATURE_RULINGS: dict[str, dict[str, str]] = {
             "closed case list, not about one verse"
         )
     },
+    "Israel:Ísrael": {
+        "whitakers": (
+            "treats this spelling of the indeclinable proper name as nominative or "
+            "vocative only; the dative beneficiary in bonus Israel Deus rectis corde "
+            "is established by the clause, while Collatinus leaves the case open. "
+            "This is the same closed-case-list limitation as Israel:Israël, not "
+            "independent analyzer proof of the dative"
+        )
+    },
     "consilium:consílii": {
         "whitakers": (
             "offers only a locative for the uncontracted form; consílii is the genitive "
@@ -341,6 +357,16 @@ FEATURE_RULINGS: dict[str, dict[str, str]] = {
             "confirms the ablative gerund under pecco"
         )
     },
+    "veneror:venerándo": {
+        "whitakers": (
+            "models this gerund as a future passive gerundive. In the Seven Sorrows "
+            "collect, dolores eius venerando recolimus, venerando expresses the "
+            "manner of commemoration; no ablative nominal licenses gerundive "
+            "agreement. Deponents have active gerunds. Collatinus confirms the "
+            "ablative gerund under veneror; the attested collateral venero is not "
+            "thereby rejected as a Latin verb"
+        )
+    },
     "pecco:peccandíque": {
         "whitakers": (
             "models the enclitic-bearing gerund as its gerundive and returns future passive "
@@ -355,6 +381,16 @@ FEATURE_RULINGS: dict[str, dict[str, str]] = {
             "neuter bonum in summum bonum, both standing in accusative apposition to te. "
             "The agreement and phrase syntax require the superlative adjective, which "
             "Collatinus confirms under summus"
+        )
+    },
+    "summus:summis": {
+        "whitakers": (
+            "offers noun summa/summum readings alone. In reconcilians ima summis "
+            "(Annunciation Paschal Alleluia), the lower things are reconciled with "
+            "the upper: summis is a substantivized superlative adjective in the "
+            "neuter dative plural. Lewis and Short, summus/superus and reconcilio, "
+            "support the adjective and accusative-plus-dative construction; "
+            "Collatinus confirms the adjective form under summus"
         )
     },
     "proximus:próximas": {
