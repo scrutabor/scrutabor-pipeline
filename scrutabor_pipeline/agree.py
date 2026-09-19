@@ -574,13 +574,19 @@ def compare(text_id: str, word: dict) -> Verdict:
         if votes.get(name, ("", ""))[0] == "CONTRADICTS":
             votes[name] = ("ABSTAINS", "")
 
+    # Overall agreement and individual confirmations are separate facts.
+    # Preserve a real confirmation even when the other analyzer disagrees;
+    # the disagreement still remains in the review queue.
+    confirming = [name for name, (v, _) in votes.items() if v == "CONFIRMS"]
     contradictions = [f"{d}" for v, d in votes.values() if v == "CONTRADICTS"]
     if contradictions:
         return Verdict(
-            ref, "DIVERGE", detail=f"ours={our_pos}:{ours} | " + " | ".join(contradictions)
+            ref,
+            "DIVERGE",
+            sources="+".join(confirming),
+            detail=f"ours={our_pos}:{ours} | " + " | ".join(contradictions),
         )
 
-    confirming = [name for name, (v, _) in votes.items() if v == "CONFIRMS"]
     if confirming:
         if ruled:
             return Verdict(
