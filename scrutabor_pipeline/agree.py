@@ -48,6 +48,9 @@ POS_RULINGS: dict[str, set[str]] = {
 LEMMA_ALIASES: dict[str, tuple[str, ...]] = {
     "ab": ("a", "ab"),  # Whitaker's carries a and ab as two entries
     "tu": ("tu", "tecum"),  # Collatinus dictionaries the fused tecum itself
+    # Lewis and Short, dextera: both spellings name the feminine noun.
+    # Collatinus heads it under dextra; dexterus is a distinct adjective.
+    "dextera": ("dextera", "dextra"),
     # Homograph discriminators (corpus SCHEMA.md): the key carries the part of
     # speech, the analyzers are asked about the word itself.
     "hic_adverbium": ("hic",),
