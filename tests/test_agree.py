@@ -133,6 +133,9 @@ def test_discriminated_homonyms_link_without_losing_their_identity():
         "adversus_prep": "adversus",
         "sero_adverb": "sero",
         "infernus_inferior": "infernus",
+        "occido_cado": "occido",
+        "excido_cado": "excido",
+        "furor_nomen": "furor",
     }.items():
         assert agree.link_spellings(lemma) == (spelling,)
     assert agree.link_spellings("unregistered_homonym") == ()

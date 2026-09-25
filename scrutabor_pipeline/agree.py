@@ -72,6 +72,12 @@ LEMMA_ALIASES: dict[str, tuple[str, ...]] = {
     # so the agreement report and the review queue could not be produced at
     # all from 2026-08-18, the day that text landed.
     "liber_volumen": ("liber",),
+    # Verb homographs split by quantity: occído kill / óccido fall, set;
+    # excído cut out / éxcido fall away; and the deponent furor, furári
+    # (steal) beside the noun furor, furóris (rage).
+    "occido_cado": ("occido",),
+    "excido_cado": ("excido",),
+    "furor_nomen": ("furor",),
     # Collatinus dictionaries the fused id+ipsum as one lemma (as it does
     # tecum, three lines up); the corpus lemmatizes the pronoun under idem
     # and lets the fusion be the form's business.
