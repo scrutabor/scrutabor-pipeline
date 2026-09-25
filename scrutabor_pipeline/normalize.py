@@ -31,7 +31,14 @@ SPELLING_PREFIXES = [
     # identity link is made on both sides at once.
     ("lacrym", "lacrim"),
     ("ierosolym", "hierosolym"),
+    # The typical edition prints the family with one l (solémnia, solemnitáte,
+    # solémniter); both analyzers head it sollemnis.
+    ("solemn", "sollemn"),
 ]
+
+# Whole liturgical words whose dictionary spelling differs, where a prefix
+# rewrite would reach other words: pene (almost) is paene, but penetro is not.
+SPELLING_WORDS = {"pene": "paene"}
 
 
 def strip_accents(text: str) -> str:
@@ -51,7 +58,7 @@ def analyzer_query(form: str) -> str:
     for liturgical, classical in SPELLING_PREFIXES:
         if text.startswith(liturgical):
             text = classical + text[len(liturgical) :]
-    return text
+    return SPELLING_WORDS.get(text, text)
 
 
 VOWELS = frozenset("aeiouy")

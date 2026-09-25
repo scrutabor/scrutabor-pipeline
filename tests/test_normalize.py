@@ -40,6 +40,21 @@ def test_greek_loans_lose_the_y_and_regain_the_aspirate():
     assert whitakers_query("Ierosólymis") == "hierosolymis"
 
 
+def test_printed_single_l_solemn_family_reaches_the_dictionary_head():
+    assert analyzer_query("solémnia") == "sollemnia"
+    assert analyzer_query("Solemnitáte") == "sollemnitate"
+    assert analyzer_query("solémniter") == "sollemniter"
+    # the lemma string is already the dictionary spelling
+    assert analyzer_query("sollemnis") == "sollemnis"
+
+
+def test_pene_is_rewritten_as_a_whole_word_only():
+    assert analyzer_query("pene") == "paene"
+    # a prefix rewrite would corrupt words that merely begin with pene
+    assert analyzer_query("penetrábit") == "penetrabit"
+    assert analyzer_query("penes") == "penes"
+
+
 def test_whitakers_query_writes_the_glide_as_j():
     # its dictionary heads the consonant as j; the i-form finds nothing
     assert whitakers_query("Iesu") == "jesu"
