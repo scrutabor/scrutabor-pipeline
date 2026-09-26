@@ -59,6 +59,7 @@ LEMMA_ALIASES: dict[str, tuple[str, ...]] = {
     "clam_adverbium": ("clam",),
     "supra_adverbium": ("supra",),
     "foris_adverbium": ("foris",),  # outside, distinct from foris the door
+    "intro_adverbium": ("intro",),  # inside, distinct from the verb intrare
     "dico_dedicare": ("dico",),  # dedicate, first conjugation, not dicere (say)
     "volo_volare": ("volo",),  # fly, first conjugation, not velle (wish)
     "praedico_praedicere": ("praedico",),  # foretell, third conjugation, not proclaim
@@ -912,6 +913,14 @@ FEATURE_RULINGS: dict[str, dict[str, str]] = {
         ),
         "collatinus": (
             "the same: nominative, vocative or ablative, where the list requires the genitive"
+        ),
+    },
+    "sum:fúerint": {
+        "whitakers": (
+            "gives fúerint only as the perfect subjunctive, though the future perfect "
+            "indicative has the same form, as Collatinus has it (and Whitaker's itself for "
+            "fúerit); in cum inebriáti fúerint, tunc id, quod detérius est (Jn 2:10) the "
+            "temporal cum answered by tunc is the future perfect indicative"
         ),
     },
 }
