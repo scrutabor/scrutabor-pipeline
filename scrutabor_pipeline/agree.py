@@ -25,6 +25,7 @@ Combined verdict for a token:
 from dataclasses import dataclass
 
 from . import collatinus, whitakers
+from .normalize import analyzer_query
 
 # Recorded classification rulings (corpus SCHEMA.md, TERMINOLOGY decisions):
 # our part of speech on the left may match these analyzer parts of speech.
@@ -678,6 +679,45 @@ def _pos_match(our_pos: str, candidate_pos: str) -> bool:
     return candidate_pos == our_pos or candidate_pos in POS_RULINGS.get(our_pos, set())
 
 
+def _whitakers_class_gap(form: str, ours: dict, theirs: dict) -> str | None:
+    """A reading Whitaker's tables cannot give, recognized by what they print instead.
+
+    It has no gerund: every -nd- form comes back as the gerundive (the future
+    passive participle), whose neuter singular in the oblique cases is the
+    gerund's own form. And its tables give the -ii genitive singular of
+    second-declension nouns in -ius and -ium (sacrifícii, iudícii, fílii) only
+    as a locative, a case these nouns do not have in use. In both cases the
+    analyzer is set aside, never counted as confirming: it cannot tell the
+    gerund from the gerundive, and it does not print the genitive at all.
+    """
+    if ours.get("mood") == "ger":
+        if (
+            theirs.get("tense") == "fut"
+            and theirs.get("voice") == "pass"
+            and theirs.get("case") == ours.get("case")
+            and theirs.get("number") == "sg"
+            and theirs.get("gender") == "n"
+        ):
+            return (
+                "has no gerund and prints the form as the gerundive of the same case, "
+                "whose neuter singular is the gerund's form"
+            )
+        return None
+    if (
+        ours.get("case") == "gen"
+        and ours.get("number") == "sg"
+        and theirs.get("case") == "loc"
+        and theirs.get("number") == "sg"
+        and theirs.get("gender") in (None, ours.get("gender"))
+        and analyzer_query(form).endswith("ii")
+    ):
+        return (
+            "gives the -ii genitive singular of a second-declension noun only as a "
+            "locative, a case the noun does not have in use"
+        )
+    return None
+
+
 def _whitakers_vote(word: dict, our_pos: str, ours: dict) -> tuple[str, str]:
     cands = whitakers.candidates(word["form"])
     if not cands:
@@ -686,6 +726,12 @@ def _whitakers_vote(word: dict, our_pos: str, ours: dict) -> tuple[str, str]:
         c for c in cands if _pos_match(our_pos, c.pos) and _features_match(ours, c.feature_dict())
     ]
     if not matching:
+        for c in cands:
+            gap = _pos_match(our_pos, c.pos) and _whitakers_class_gap(
+                word["form"], ours, c.feature_dict()
+            )
+            if gap:
+                return "CLASS_GAP", gap
         proposals = sorted({f"{c.pos}:{c.feature_dict()}" for c in cands})
         return "CONTRADICTS", f"whitakers proposes {proposals[:6]}"
     identities = {
@@ -737,6 +783,13 @@ def compare(text_id: str, word: dict) -> Verdict:
     ]
     for name in identity_rulings:
         if votes.get(name, ("", ""))[0] in {"CONFIRMS", "FORM_MATCH", "CONTRADICTS"}:
+            votes[name] = ("ABSTAINS", "")
+
+    # A reading the analyzer's tables cannot give at all is set aside the same
+    # way, for the whole class, with the reason (see _whitakers_class_gap).
+    for name, (vote, reason) in list(votes.items()):
+        if vote == "CLASS_GAP":
+            ruled.append(f"{name} set aside: {reason}")
             votes[name] = ("ABSTAINS", "")
 
     # An adjudicated contradiction abstains instead of counting against us,

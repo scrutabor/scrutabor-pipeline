@@ -469,3 +469,37 @@ def test_an_unaliased_discriminated_lemma_gets_a_verdict_not_a_crash():
     }
     verdict = compare("test.text", word)
     assert verdict.verdict in {"AGREE_FORM_ONLY", "EDITORIAL_ONLY", "FORM_ABSENT", "DIVERGE"}
+
+
+def test_gerund_sets_whitakers_aside_for_its_missing_category():
+    # Whitaker's has no gerund and prints moriéndi as the gerundive; it is set
+    # aside with the reason, never counted as confirming the gerund.
+    gerund = word(
+        "moriéndi",
+        "morior",
+        pos="verb",
+        mood="ger",
+        tense="pres",
+        voice="act",
+        case="gen",
+        number="sg",
+        gender="n",
+        conj=3,
+    )
+    verdict = compare("t", gerund)
+    assert verdict.verdict in {"AGREE_RULED", "EDITORIAL_ONLY"}
+    assert "whitakers" not in verdict.sources.split("+")
+    assert "has no gerund" in verdict.detail
+    gerund["morph"]["case"] = "dat"
+    assert compare("t", gerund).verdict == "DIVERGE"
+
+
+def test_ii_genitive_sets_whitakers_aside_for_its_locative_only_table():
+    genitive = word(
+        "sacrifícii", "sacrificium", pos="noun", case="gen", number="sg", gender="n", decl=2
+    )
+    verdict = compare("t", genitive)
+    assert verdict.verdict in {"AGREE_RULED", "EDITORIAL_ONLY"}
+    assert "whitakers" not in verdict.sources.split("+")
+    genitive["morph"]["case"] = "dat"
+    assert compare("t", genitive).verdict == "DIVERGE"
