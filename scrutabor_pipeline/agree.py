@@ -210,7 +210,7 @@ FEATURE_RULINGS: dict[str, dict[str, str]] = {
         "whitakers": (
             "carries no agent noun sanctificator and reads the -tor ending as the archaic "
             "future passive imperative of sanctifico; the word is the Christian-Latin noun "
-            "sanctificátor, sanctificatóris, which Collatinus heads and confirms in the vocative"
+            "sanctificátor, sanctificatóris, which Collatinus heads and confirms"
         )
     },
     "filius:Fílii": {
@@ -274,10 +274,10 @@ FEATURE_RULINGS: dict[str, dict[str, str]] = {
     # one is a case where the edition is right and a dictionary is short.
     "meus:meus": {
         "whitakers": (
-            "offers only the nominative; Deus meus is the Psalter's address (Ps 21:2 and "
-            "throughout), the possessive standing in the vocative beside the "
-            "nominative-for-vocative Deus, where the classical paradigm's mi never appears "
-            "in these books"
+            "offers only the nominative; meus in address stands in the vocative, as in "
+            "Deus meus, the Psalter's address (Ps 21:2 and throughout), beside the "
+            "nominative-for-vocative Deus, and in pópule meus (Ps 77:1), where the "
+            "classical paradigm's mi never appears in these books"
         ),
         "collatinus": (
             "the same: nominative alone, the classical mi expected for the vocative. The "
@@ -421,6 +421,101 @@ FEATURE_RULINGS: dict[str, dict[str, str]] = {
             "caseless homograph, not the high priest (Lc 3:2). The name declines Annas, "
             "Annæ like the Greek masculines beside it in the verse, and the ablative "
             "stands in the same absolute as Cáipha two words on"
+        )
+    },
+    # --- adverbs Whitaker's carries only as adjective or numeral forms ---
+    "stricte:stricte": {
+        "whitakers": (
+            "offers only the vocative of strictus; in Cuncta stricte discussúrus the word "
+            "qualifies the participle (the judge who will examine all things strictly), the "
+            "adverb Lewis and Short give under strictus"
+        )
+    },
+    "mystice:mýstice": {
+        "whitakers": (
+            "offers only the vocative of mysticus; in quæ sub oblátis munéribus mýstice "
+            "designántur the word qualifies the verb (signified mystically), the adverb of "
+            "the Christian writers"
+        )
+    },
+    "iniuste:iniúste": {
+        "whitakers": (
+            "offers only the vocative of iniustus; in tradébat autem iudicánti se iniúste "
+            "(1 Pt 2:23, the Vulgate's reading) the word qualifies the participle, to him "
+            "who judged him unjustly"
+        )
+    },
+    "pacifice:pacífice": {
+        "whitakers": (
+            "offers only the vocative of pacificus; in mundi cursus pacífice nobis tuo "
+            "órdine dirigátur the word qualifies the verb (be directed peacefully), the "
+            "adverb Collatinus heads"
+        )
+    },
+    "pie:pie": {
+        "whitakers": (
+            "offers only vocatives, of pius and of the name Pius; in sóbrie et iuste et pie "
+            "vivámus (Tit 2:12) and Fac me tecum pie flere the word is the adverb, as "
+            "Collatinus heads it"
+        )
+    },
+    "prospere:próspere": {
+        "whitakers": (
+            "offers only the vocative of prosperus; in inténde, próspere procéde, et regna "
+            "(Ps 44:5) the word qualifies the imperative (go forward prosperously)"
+        )
+    },
+    "valide:válide": {
+        "whitakers": (
+            "offers only the vocative of validus; in Crucifíxi fige plagas cordi meo válide "
+            "the word qualifies the imperative (fix them firmly), the adverb Lewis and Short "
+            "give under validus. Collatinus reads the form under the contracted valde"
+        )
+    },
+    "multifariam:Multifárie": {
+        "whitakers": (
+            "offers only the vocative of an adjective; Multifárie olim Deus loquens (Heb 1:1 "
+            "in the Christmas octave Alleluia) is the adverb, in many ways, the -e variant "
+            "of multifariam"
+        )
+    },
+    "semel:semel": {
+        "whitakers": (
+            "files the numeral adverb under its numeral and reports it as an adjective "
+            "without case; semel (once) qualifies the verb in every occurrence here "
+            "(introívit semel, mórtuus est semel, semel lapidátus sum)"
+        )
+    },
+    "bis:bis": {
+        "whitakers": (
+            "files the numeral adverb under its numeral and reports it as an adjective "
+            "without case; in Ieiúno bis in sábbato bis (twice) qualifies the verb"
+        )
+    },
+    "quinquies:quínquies": {
+        "whitakers": (
+            "files the numeral adverb under its numeral and reports it as an adjective "
+            "without case; in A Iudǽis quínquies quadragénas una minus accépi the word "
+            "(five times) qualifies the verb"
+        )
+    },
+    # --- gender ---
+    "villicatio:villicatiónis": {
+        "whitakers": (
+            "carries villicatio as masculine; like every -tio abstract, and as Lewis and "
+            "Short head it (villicatio, onis, f.), the noun is feminine"
+        )
+    },
+    "villicatio:villicatiónem": {
+        "whitakers": (
+            "carries villicatio as masculine; like every -tio abstract, and as Lewis and "
+            "Short head it (villicatio, onis, f.), the noun is feminine"
+        )
+    },
+    "villicatio:villicatióne": {
+        "whitakers": (
+            "carries villicatio as masculine; like every -tio abstract, and as Lewis and "
+            "Short head it (villicatio, onis, f.), the noun is feminine"
         )
     },
 }
