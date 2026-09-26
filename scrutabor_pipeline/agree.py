@@ -57,7 +57,8 @@ LEMMA_ALIASES: dict[str, tuple[str, ...]] = {
     "hic_adverbium": ("hic",),
     "caligo_nomen": ("caligo",),
     "clam_adverbium": ("clam",),
-    "supra_adverbium": ("supra",),
+    # Collatinus heads the comparative adverb superius (higher) as its own entry.
+    "supra_adverbium": ("supra", "superius"),
     "foris_adverbium": ("foris",),  # outside, distinct from foris the door
     "intro_adverbium": ("intro",),  # inside, distinct from the verb intrare
     "dico_dedicare": ("dico",),  # dedicate, first conjugation, not dicere (say)
@@ -929,6 +930,13 @@ FEATURE_RULINGS: dict[str, dict[str, str]] = {
             "indicative has the same form, as Collatinus has it (and Whitaker's itself for "
             "fúerit); in cum inebriáti fúerint, tunc id, quod detérius est (Jn 2:10) the "
             "temporal cum answered by tunc is the future perfect indicative"
+        ),
+    },
+    "supra_adverbium:supérius": {
+        "whitakers": (
+            "gives supérius only as the neuter of the comparative adjective; in Amíce, ascénde "
+            "supérius (Lk 14:10) it is the comparative adverb of supra, go up higher (Lewis and "
+            "Short s.v. supra), as ámplius and dígnius are read and as Collatinus has it"
         ),
     },
 }
