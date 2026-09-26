@@ -16,7 +16,22 @@ def companion():
     }
 
 
-def test_personal_companions_preserve_confirmation_and_disagreement():
+@pytest.fixture
+def unruled(monkeypatch):
+    """The mechanism tests below need an open disagreement: the companion's own
+    was adjudicated on 2026-09-26 (Collatinus reads the noun consortium), so its
+    ruling is lifted for them."""
+    monkeypatch.delitem(agree.FEATURE_RULINGS, "consors:consórtium")
+
+
+def test_personal_companions_disagreement_is_ruled_and_confirmation_kept():
+    result = agree.compare("proprium.example", companion())
+    assert result.verdict == "AGREE_RULED"
+    assert result.sources == "whitakers"
+    assert "collatinus set aside" in result.detail
+
+
+def test_personal_companions_preserve_confirmation_and_disagreement(unruled):
     result = agree.compare("proprium.example", companion())
     assert result.verdict == "DIVERGE"
     assert result.sources == "whitakers"
@@ -25,7 +40,9 @@ def test_personal_companions_preserve_confirmation_and_disagreement():
 
 
 @pytest.mark.parametrize("confirming", ["whitakers", "collatinus"])
-def test_each_analyzers_confirmation_survives_the_others_contradiction(monkeypatch, confirming):
+def test_each_analyzers_confirmation_survives_the_others_contradiction(
+    monkeypatch, unruled, confirming
+):
     for name in ("whitakers", "collatinus"):
         vote = ("CONFIRMS", "") if name == confirming else ("CONTRADICTS", f"{name} disagrees")
         monkeypatch.setattr(agree, f"_{name}_vote", lambda *_args, vote=vote: vote)
@@ -36,7 +53,9 @@ def test_each_analyzers_confirmation_survives_the_others_contradiction(monkeypat
 
 
 @pytest.mark.parametrize("claims_both", [False, True])
-def test_strict_provenance_names_only_the_analyzer_that_confirms(tmp_path, capsys, claims_both):
+def test_strict_provenance_names_only_the_analyzer_that_confirms(
+    tmp_path, capsys, unruled, claims_both
+):
     source = tmp_path / "texts" / "proprium"
     source.mkdir(parents=True)
     claims = ["editorial", "whitakers"] + (["collatinus"] if claims_both else [])

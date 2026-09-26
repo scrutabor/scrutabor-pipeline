@@ -587,6 +587,294 @@ FEATURE_RULINGS: dict[str, dict[str, str]] = {
             "Short head it (villicatio, onis, f.), the noun is feminine"
         )
     },
+    # --- the divergence queue, adjudicated 2026-09-26 ---
+    "quaeso:Quǽsumus": {
+        "collatinus": (
+            "reads the fossilised parenthetical as its own lemma and tags it 3rd singular; "
+            "capitalized at the head of a prayer it is still the 1st plural of quaeso"
+        ),
+    },
+    "pascha:Pascha": {
+        "whitakers": (
+            "heads only the first-declension feminine pascha, -ae; Pascha nostrum immolátus"
+            " est Christus (1 Cor 5:7), novum Pascha and próximum Pascha are the neuter "
+            "Pascha the Vulgate uses"
+        ),
+    },
+    "poenitens:pæniténtibus": {
+        "whitakers": (
+            "offers the present participle of paeniteo; the corpus heads the substantive "
+            "the penitent as the adjective paenitens, one form classified two ways"
+        ),
+    },
+    "butyrum:Butýrum": {
+        "whitakers": (
+            "offers only a genitive plural; Butýrum et mel cómedet (Is 7:15) is the "
+            "accusative singular object, as Collatinus has it"
+        ),
+    },
+    "prior:prior": {
+        "whitakers": (
+            "heads prior only as the noun (a superior); quia prior me erat (Jn 1:15) and "
+            "quis prior dedit illi (Rom 11:35) are the comparative adjective"
+        ),
+    },
+    "prior:prióri": {
+        "whitakers": (
+            "offers only the noun; sub prióri testaménto (Heb 9:15) is the comparative "
+            "adjective agreeing with testaménto"
+        ),
+        "collatinus": (
+            "gives the dative alone; the ablative prióri of sub prióri testaménto is the "
+            "i-ablative of the comparative, beside classical priore"
+        ),
+    },
+    "prior:prióribus": {
+        "whitakers": (
+            "offers only the noun; peióra prióribus (Lk 11:26) is the comparative "
+            "adjective, the ablative of comparison"
+        ),
+    },
+    "sum:futúrus": {
+        "whitakers": (
+            "lists futurus as an adjective; in Quantus tremor est futúrus it is the future "
+            "participle of sum"
+        ),
+    },
+    "manna:manna": {
+        "collatinus": (
+            "declines manna in the first declension; the Vulgate's manna is the "
+            "indeclinable neuter, here the object of manducavérunt (Jn 6:59)"
+        ),
+    },
+    "duodenus:duodénæ": {
+        "whitakers": (
+            "knows the distributive only in the plural; in turbæ fratrum duodénæ the "
+            "singular agrees with turbæ, the company of the twelve"
+        ),
+        "collatinus": ("the same: plural alone, where the sequence agrees it with turbæ"),
+    },
+    "mille:mille": {
+        "collatinus": (
+            "heads mille as a singular noun; sumunt mille and Cadent a látere tuo mille use"
+            " the indeclinable numeral for a plural subject"
+        ),
+    },
+    "memini:meménto": {
+        "whitakers": (
+            "labels the imperative present; memini, which has only perfect forms, forms its"
+            " imperative on the future, memento, as the grammars head it"
+        ),
+    },
+    "memini:Mementóte": {
+        "whitakers": (
+            "labels the imperative present; mementote is the future imperative of memini, "
+            "the only imperative the verb has"
+        ),
+    },
+    "fractura:fractúra": {
+        "whitakers": (
+            "offers only the future participle of frango; in signi tantum fit fractúra the "
+            "word is the noun, a breaking"
+        ),
+    },
+    "temptator:tentátor": {
+        "whitakers": (
+            "has no agent noun temptator and reads the form as a future passive imperative;"
+            " Et accédens tentátor dixit (Mt 4:3) is the noun"
+        ),
+    },
+    "mediator:mediátor": {
+        "whitakers": (
+            "has no agent noun mediator and reads the form as a future passive imperative; "
+            "novi testaménti mediátor est (Heb 9:15) is the noun"
+        ),
+    },
+    "daemonium:dæmónium": {
+        "whitakers": (
+            "lacks the neuter daemonium and reads the form as a genitive plural of daemon; "
+            "dæmónium habes (Jn 8:48) is the accusative singular"
+        ),
+    },
+    "summus:summo": {
+        "whitakers": (
+            "offers only the noun summum; a summo usque deórsum (Mt 27:51) and ipso summo "
+            "angulári lápide (Eph 2:20) are the superlative adjective"
+        ),
+    },
+    "idipsum:Idípsum": {
+        "whitakers": (
+            "offers only an adverb; Idípsum ínvicem sentiéntes (Rom 12:16) is the neuter "
+            "pronoun, the object of sentiéntes"
+        ),
+    },
+    "idipsum:idípsum": {
+        "whitakers": (
+            "offers only an adverb; in idípsum (Ps 121:3) is the neuter pronoun after in, together"
+        ),
+    },
+    "quidam:quædam": {
+        "whitakers": (
+            "classifies quidam as a pronoun only; quædam múlier (Lk 11:27) is its "
+            "adjectival use, which the corpus tags adj"
+        ),
+    },
+    "pressura:pressúræ": {
+        "whitakers": (
+            "offers only the future participle of premo; non méminit pressúræ (Jn 16:21) is"
+            " the noun distress, genitive after memini"
+        ),
+    },
+    "vidua:vídua": {
+        "whitakers": (
+            "offers only the adjective viduus; hæc vídua (Lk 2:37, 7:12) is the noun widow"
+        ),
+    },
+    "proximus:próximum": {
+        "whitakers": (
+            "heads the neighbour as a noun; the corpus tags próximus as the adjective, used"
+            " substantively in Díliges próximum tuum and predicative in Erat autem próximum"
+            " Pascha"
+        ),
+    },
+    "proximus:próximi": {
+        "whitakers": (
+            "heads the neighbour as a noun; the corpus tags the substantive próximus as the"
+            " adjective (Diléctio próximi, Rom 13:10)"
+        ),
+    },
+    "proximus:próximus": {
+        "whitakers": (
+            "heads the neighbour as a noun; the corpus tags the substantive próximus as the"
+            " adjective (Et quis est meus próximus, Lk 10:29)"
+        ),
+    },
+    "proximus:próximo": {
+        "whitakers": (
+            "heads the neighbour as a noun; the corpus tags the substantive próximus as the"
+            " adjective (cum próximo suo, Eph 4:25)"
+        ),
+    },
+    "proximus:próximos": {
+        "whitakers": (
+            "heads the neighbour as a noun; the corpus tags the substantive próximus as the"
+            " adjective (apud próximos suos, Ecclus 15:5)"
+        ),
+    },
+    "intimus:íntima": {
+        "whitakers": (
+            "offers only the imperative of intimo; reple cordis íntima and roris íntima "
+            "aspersióne are the adjective intimus"
+        ),
+    },
+    "vetus:véteri": {
+        "collatinus": (
+            "gives the dative alone; in ferménto véteri (1 Cor 5:8) the ablative veteri is "
+            "the late form beside vetere"
+        ),
+    },
+    "exeo:exísti": {
+        "whitakers": (
+            "reads a passive infinitive; quia a Deo exísti (Jn 16:30) is the contracted "
+            "perfect of exeo, exiisti"
+        ),
+    },
+    "satum:satis": {
+        "whitakers": (
+            "offers only satis and forms of sero; in farínæ satis tribus (Mt 13:33) it is "
+            "the ablative plural of satum, a measure"
+        ),
+    },
+    "ficus:ficus": {
+        "collatinus": (
+            "offers the nominative singular alone; de tríbulis ficus (Mt 7:16) is the "
+            "accusative plural of the fourth declension"
+        ),
+        "whitakers": (
+            "heads ficus masculine; the corpus follows the feminine of Lewis and Short, "
+            "fourth declension in de tríbulis ficus (Mt 7:16)"
+        ),
+    },
+    "sufficientia:sufficiéntia": {
+        "whitakers": (
+            "offers only the participle of sufficio; sufficiéntia nostra ex Deo est (2 Cor "
+            "3:5) is the noun"
+        ),
+    },
+    "secta:sectæ": {
+        "whitakers": (
+            "offers only the participle of seco; dissensiónes, sectæ (Gal 5:20) is the "
+            "noun, factions"
+        ),
+    },
+    "huiusmodi:huiúsmodi": {
+        "whitakers": (
+            "gives the genitive alone; the indeclinable huiúsmodi stands in Advérsus "
+            "huiúsmodi non est lex (Gal 5:23) as the object of the preposition"
+        ),
+    },
+    "interior:interiórem": {
+        "whitakers": (
+            "offers only a noun; in interiórem hóminem (Eph 3:16) is the comparative "
+            "adjective agreeing with hóminem"
+        ),
+    },
+    "fluxus:fluxum": {
+        "whitakers": (
+            "offers only the adjective fluxus; sánguinis fluxum patiebátur (Mt 9:20) is the"
+            " fourth-declension noun"
+        ),
+    },
+    "Saba:Saba": {
+        "collatinus": (
+            "enumerates the indeclinable name without the genitive; reges Árabum et Saba "
+            "(Ps 71:10) is the genitive"
+        ),
+    },
+    "aether:ǽthera": {
+        "collatinus": (
+            "reads a noun aethera; ǽthera firmábat sursum (Prov 8:28) is the Greek "
+            "accusative of aether"
+        ),
+    },
+    "Phares:Phares": {
+        "collatinus": (
+            "reads a plural of pharis; Phares is the indeclinable name of the genealogy (Mt 1:3)"
+        ),
+    },
+    "Aram:Aram": {
+        "whitakers": ("heads Aram feminine; the son of Esron in the genealogy (Mt 1:3-4) is a man"),
+    },
+    "Eleazar:Eleázar": {
+        "collatinus": (
+            "enumerates the indeclinable name as nominative or vocative only; Éliud génuit "
+            "Eleázar (Mt 1:15) is the accusative"
+        ),
+    },
+    "potens:Potens": {
+        "collatinus": (
+            "lists the nominative of the one-termination adjective for masculine and "
+            "feminine only; Potens in terra erit semen eius agrees with the neuter semen"
+        ),
+    },
+    "Iona:Iona": {
+        "collatinus": (
+            "reads ion or Ionas; in Simon Bar Iona (Mt 16:17) the father's name is the "
+            "genitive after Bar, son"
+        ),
+    },
+    "consors:consórtium": {
+        "collatinus": (
+            "reads the noun consortium; in suo suorúmque sub Cruce Sanctórum consórtium it "
+            "is the genitive plural of consors, companions"
+        ),
+    },
+    "vos:vos": {
+        "collatinus": (
+            "lists no vocative; O vos omnes qui transítis per viam (Lam 1:12) addresses the"
+            " passers-by"
+        ),
+    },
 }
 
 # Proper names whose normalized spelling is identical to an ordinary Latin
@@ -641,6 +929,57 @@ CASEFOLD_HOMOGRAPH_RULINGS: dict[str, dict[str, str]] = {
             "likewise heads only perpetuus/perpetuum, not the martyr Perpetua; its "
             "case-folded adjective parse cannot establish lexical identity"
         ),
+    },
+    "Sina:Sina": {
+        "whitakers": (
+            "carries only sinum (a bowl), whose neuter plural shares the surface; that "
+            "match cannot establish Mount Sinai"
+        ),
+    },
+    "Cana:Cana": {
+        "whitakers": (
+            "carries only canus (grey), whose feminine shares the surface; that match "
+            "cannot establish Cana of Galilee"
+        ),
+    },
+    "Anna:Anna": {
+        "whitakers": (
+            "reads the name as a verb form; that parse cannot establish the prophetess Anna"
+        ),
+    },
+    "Agar:Agar": {
+        "whitakers": (
+            "reads the name as a passive subjunctive of ago; that parse cannot establish Hagar"
+        ),
+    },
+    "Medus:Medi": {
+        "whitakers": ("reads a form of medius or medium; that match cannot establish the Medes"),
+    },
+    "Cres:Cretes": {
+        "whitakers": (
+            "reads a form of Creta, the island; Cretes et Árabes (Acts 2:11) are Cretans"
+        ),
+    },
+    "Clemens:Cleménte": {
+        "whitakers": (
+            "carries only the adjective clemens; that match cannot establish the Clement of"
+            " Phil 4:3"
+        ),
+    },
+    "Levi:Levi": {
+        "whitakers": (
+            "reads forms of levis and levo; that match cannot establish the tribe of Levi"
+        ),
+    },
+    "Asa:Asa": {
+        "whitakers": ("reads a feminine common noun; that match cannot establish king Asa"),
+        "collatinus": ("reads a form of asum; that match cannot establish king Asa"),
+    },
+    "Cilicia:Cilícia": {
+        "whitakers": ("reads cilicium, haircloth; that match cannot establish the province"),
+    },
+    "Simon:Simóne": {
+        "whitakers": ("reads an adjective; that match cannot establish the Apostle Simon"),
     },
 }
 
