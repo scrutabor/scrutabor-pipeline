@@ -59,6 +59,7 @@ LEMMA_ALIASES: dict[str, tuple[str, ...]] = {
     "supra_adverbium": ("supra",),
     "foris_adverbium": ("foris",),  # outside, distinct from foris the door
     "dico_dedicare": ("dico",),  # dedicate, first conjugation, not dicere (say)
+    "volo_volare": ("volo",),  # fly, first conjugation, not velle (wish)
     "labor_labi": ("labor",),  # deponent labi, not the noun laboris
     "mundus_purus": ("mundus",),  # clean, not the noun meaning world
     "inimicus_hostilis": ("inimicus",),  # hostile adjective, not the enemy noun
@@ -261,6 +262,20 @@ FEATURE_RULINGS: dict[str, dict[str, str]] = {
             "enumerates the indeclinable name as nominative or vocative only; Ex tribu "
             "Símeon (Apoc 7:7), like every tribe name in the list around it, is the genitive"
         )
+    },
+    "Iuda:Iuda": {
+        "collatinus": (
+            "enumerates the indeclinable name as nominative, vocative or ablative only; in ex "
+            "tribu Iuda (Apoc 7:5) and de tribu Iuda the tribe's name is the genitive, as the "
+            "Greek Ἰούδα is"
+        )
+    },
+    "abyssus:abýssus": {
+        "whitakers": (
+            "offers only the nominative; in Cor Iesu, virtútum ómnium abýssus the title stands "
+            "in apposition to the addressed Heart, a Greek feminine in -us used for its vocative"
+        ),
+        "collatinus": "the same: nominative alone, where the litany addresses the Heart",
     },
     "Abraham:Ábrahæ": {
         "collatinus": (
