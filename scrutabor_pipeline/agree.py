@@ -277,6 +277,20 @@ FEATURE_RULINGS: dict[str, dict[str, str]] = {
             "unumquódque eórum ... ambulábat (Ezek 1:12) it is the subject"
         )
     },
+    "summus:summæ": {
+        "whitakers": (
+            "reads summæ only as the noun summa; in uníus summæ divinitátis "
+            "partícipes it is the superlative adjective agreeing with divinitátis, "
+            "as Collatinus has it"
+        )
+    },
+    "praedicator:prædicátor": {
+        "whitakers": (
+            "offers only the future passive imperative of prǽdico; in éxstitit "
+            "prædicátor et rector the word is the noun, coordinated with rector, "
+            "as Collatinus has it"
+        )
+    },
     "consilium:consílii": {
         "whitakers": (
             "offers only a locative for the uncontracted form; consílii is the genitive "
