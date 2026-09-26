@@ -249,6 +249,34 @@ FEATURE_RULINGS: dict[str, dict[str, str]] = {
             "independent analyzer proof of the dative"
         )
     },
+    "Aaron:Áaron": {
+        "collatinus": (
+            "enumerates the indeclinable name as nominative or vocative only; in barbam "
+            "barbam Áaron (Ps 132:2) the name is the genitive, the same closed case list "
+            "as Israel:Israël"
+        )
+    },
+    "Simeon:Símeon": {
+        "collatinus": (
+            "enumerates the indeclinable name as nominative or vocative only; Ex tribu "
+            "Símeon (Apoc 7:7), like every tribe name in the list around it, is the genitive"
+        )
+    },
+    "Abraham:Ábrahæ": {
+        "collatinus": (
+            "gives the first-declension Ábrahæ as the genitive alone, while the ending is "
+            "the dative as well: Quam olim Ábrahæ promisísti (to Abraham) and Ábrahæ dictæ "
+            "sunt promissiónes (Gal 3:16) are datives. Whitaker's does not carry the name"
+        )
+    },
+    "unusquisque:unumquódque": {
+        "whitakers": (
+            "its table of the unus-quisque compound gives unumquodque only as a masculine "
+            "accusative, which the form cannot be (that is unumquemque); unumquódque is the "
+            "neuter nominative and accusative singular, as Collatinus has it, and in "
+            "unumquódque eórum ... ambulábat (Ezek 1:12) it is the subject"
+        )
+    },
     "consilium:consílii": {
         "whitakers": (
             "offers only a locative for the uncontracted form; consílii is the genitive "
