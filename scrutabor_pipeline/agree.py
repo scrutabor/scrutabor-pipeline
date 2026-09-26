@@ -638,6 +638,13 @@ FEATURE_RULINGS: dict[str, dict[str, str]] = {
             "adjective, the ablative of comparison"
         ),
     },
+    "prior:priórem": {
+        "whitakers": (
+            "offers only the noun; in me priórem vobis ódio hábuit (Jn 15:18) the "
+            "comparative adjective is predicative to me, vobis the ablative of comparison, "
+            "as Collatinus has it"
+        ),
+    },
     "sum:futúrus": {
         "whitakers": (
             "lists futurus as an adjective; in Quantus tremor est futúrus it is the future "
