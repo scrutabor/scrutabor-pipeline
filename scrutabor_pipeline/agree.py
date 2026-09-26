@@ -61,6 +61,8 @@ LEMMA_ALIASES: dict[str, tuple[str, ...]] = {
     "foris_adverbium": ("foris",),  # outside, distinct from foris the door
     "dico_dedicare": ("dico",),  # dedicate, first conjugation, not dicere (say)
     "volo_volare": ("volo",),  # fly, first conjugation, not velle (wish)
+    "praedico_praedicere": ("praedico",),  # foretell, third conjugation, not proclaim
+    "colo_colare": ("colo",),  # strain, refine, first conjugation, not colere (till)
     "labor_labi": ("labor",),  # deponent labi, not the noun laboris
     "mundus_purus": ("mundus",),  # clean, not the noun meaning world
     "inimicus_hostilis": ("inimicus",),  # hostile adjective, not the enemy noun
@@ -809,8 +811,9 @@ FEATURE_RULINGS: dict[str, dict[str, str]] = {
     },
     "huiusmodi:huiúsmodi": {
         "whitakers": (
-            "gives the genitive alone; the indeclinable huiúsmodi stands in Advérsus "
-            "huiúsmodi non est lex (Gal 5:23) as the object of the preposition"
+            "gives the genitive form alone; the indeclinable huiúsmodi takes the case of "
+            "its role, the object of the preposition in Advérsus huiúsmodi (Gal 5:23) and "
+            "Pro huiúsmodi gloriábor (2 Cor 12:5)"
         ),
     },
     "interior:interiórem": {
@@ -873,6 +876,42 @@ FEATURE_RULINGS: dict[str, dict[str, str]] = {
         "collatinus": (
             "lists no vocative; O vos omnes qui transítis per viam (Lam 1:12) addresses the"
             " passers-by"
+        ),
+    },
+    "abstergo:abstérget": {
+        "collatinus": (
+            "carries only the second-conjugation abstergeo, whose present shares the form; "
+            "et abstérget Deus omnem lácrimam (Apoc 21:4) is the future of abstergo among "
+            "the futures around it (habitábit, erit), as Whitaker's has it"
+        ),
+    },
+    "mediator:Mediátor": {
+        "whitakers": (
+            "knows no noun mediator and reads a future passive imperative; Mediátor autem "
+            "uníus non est (Gal 3:20) is the noun, the mediator of in manu mediatóris just "
+            "before, as Collatinus has it"
+        ),
+    },
+    "Aser:Aser": {
+        "collatinus": (
+            "enumerates the indeclinable name as nominative or vocative only; Ex tribu Aser "
+            "(Apoc 7:6), like every tribe name in the list around it, is the genitive"
+        ),
+    },
+    "Zabulon:Zábulon": {
+        "collatinus": (
+            "enumerates the indeclinable name as nominative or vocative only; Ex tribu "
+            "Zábulon (Apoc 7:8), like every tribe name in the list around it, is the genitive"
+        ),
+    },
+    "Manasses:Manásse": {
+        "whitakers": (
+            "gives Manásse as vocative or ablative only; in Ex tribu Manásse (Apoc 7:6), like "
+            "every tribe name in the list around it, the name is the genitive, as the Greek "
+            "Μανασσῆ is. The ablative of coram ... Manásse (Ps 79:3) it confirms"
+        ),
+        "collatinus": (
+            "the same: nominative, vocative or ablative, where the list requires the genitive"
         ),
     },
 }
