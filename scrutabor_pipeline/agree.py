@@ -327,6 +327,17 @@ FEATURE_RULINGS: dict[str, dict[str, str]] = {
             "occurrences here"
         ),
     },
+    "dominus:Dóminus": {
+        "whitakers": (
+            "offers only the nominative; in Dómine Dóminus noster (Ps 8:2) the form "
+            "stands in apposition to the vocative Dómine and is itself the address, the "
+            "nominative-for-vocative the Psalter also uses for Deus and meus"
+        ),
+        "collatinus": (
+            "the same: nominative alone; the verse addresses the Lord twice, and the "
+            "second title shares the case of the first"
+        ),
+    },
     "Ierusalem:Ierúsalem": {
         "whitakers": (
             "heads the city neuter (the Hierosolyma, -orum tradition) and contradicts the "
