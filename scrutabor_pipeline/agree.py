@@ -94,6 +94,9 @@ LEMMA_ALIASES: dict[str, tuple[str, ...]] = {
     # which the u/v fold of salvus (saluus) cannot reach. Both analyzers
     # do read the word; only the spelling of the head differs.
     "salvus": ("salvus", "salvos"),
+    # Collatinus heads the superlative nequissimus (most wicked) as its own
+    # entry; the corpus lemmatizes superlatives under the positive, nequam.
+    "nequam": ("nequam", "nequissimus"),
 }
 
 
