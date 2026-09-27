@@ -828,6 +828,14 @@ FEATURE_RULINGS: dict[str, dict[str, str]] = {
             "word is the cognomen of Joseph Barsabas, Justus, a proper noun, as Collatinus has it"
         ),
     },
+    "virgo:vírgines": {
+        "whitakers": (
+            "gives virgo only as feminine; in Hi sunt, qui cum muliéribus non sunt "
+            "coinquináti: vírgines enim sunt (Apoc 14:4) the word is said of men and is "
+            "masculine with its subject, as Lewis and Short record virgo of males in the "
+            "ecclesiastical fathers"
+        ),
+    },
     "huiusmodi:huiúsmodi": {
         "whitakers": (
             "gives the genitive form alone; the indeclinable huiúsmodi takes the case of "
