@@ -822,6 +822,12 @@ FEATURE_RULINGS: dict[str, dict[str, str]] = {
             "noun, factions"
         ),
     },
+    "Iustus:Iustus": {
+        "whitakers": (
+            "gives only the adjective iustus; in qui cognominátus est Iustus (Acts 1:23) the "
+            "word is the cognomen of Joseph Barsabas, Justus, a proper noun, as Collatinus has it"
+        ),
+    },
     "huiusmodi:huiúsmodi": {
         "whitakers": (
             "gives the genitive form alone; the indeclinable huiúsmodi takes the case of "
