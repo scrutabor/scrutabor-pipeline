@@ -56,6 +56,7 @@ LEMMA_ALIASES: dict[str, tuple[str, ...]] = {
     # speech, the analyzers are asked about the word itself.
     "hic_adverbium": ("hic",),
     "caligo_nomen": ("caligo",),
+    "os_ossis": ("os",),  # bone, os ossis, distinct from os oris (mouth)
     "clam_adverbium": ("clam",),
     # Collatinus heads the comparative adverb superius (higher) as its own entry.
     "supra_adverbium": ("supra", "superius"),
