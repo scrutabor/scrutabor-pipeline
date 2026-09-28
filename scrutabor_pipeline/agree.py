@@ -25,6 +25,7 @@ Combined verdict for a token:
 from dataclasses import dataclass
 
 from . import collatinus, whitakers
+from .feature_scopes import feature_ruling_applies
 from .normalize import analyzer_query
 
 # Recorded classification rulings (corpus SCHEMA.md, TERMINOLOGY decisions):
@@ -1264,9 +1265,10 @@ def compare(text_id: str, word: dict) -> Verdict:
             ruled.append(f"{name} set aside: {reason}")
             votes[name] = ("ABSTAINS", "")
 
-    # An adjudicated contradiction abstains instead of counting against us,
-    # and the token is reported as ruled rather than as plain agreement.
-    rulings = FEATURE_RULINGS.get(key, {})
+    # Only the recorded grammatical scope may set a contradiction aside.
+    # Sharing a lemma and surface must not excuse unrelated feature errors.
+    # The token is reported as ruled rather than as plain agreement.
+    rulings = FEATURE_RULINGS.get(key, {}) if feature_ruling_applies(key, word["morph"]) else {}
     ruled.extend(
         f"{name} set aside: {reason}"
         for name, reason in rulings.items()

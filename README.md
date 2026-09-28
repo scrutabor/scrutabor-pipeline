@@ -104,6 +104,7 @@ Module map:
 | `collatinus.py` | Collatinus adapter (French morphology → corpus vocabulary) |
 | `compat.py` | the shim that revives pycollatinus on Python ≥ 3.10 |
 | `agree.py` | per-analyzer votes, combined verdicts, recorded rulings |
+| `feature_scopes.py` | grammatical limits of the recorded per-form exceptions |
 | `agreement.py` | the report runner and review-queue writer |
 
 Extending the recorded knowledge (all in `agree.py` / `normalize.py`,
@@ -120,6 +121,13 @@ always with a reason in the adjacent comment):
 - a capitalized proper name that a case-blind analyzer confuses with an
   ordinary word → `CASEFOLD_HOMOGRAPH_RULINGS`, separately for each named
   analyzer and with the lexical reason.
+- a contradiction adjudicated for a particular form → `FEATURE_RULINGS`,
+  with a matching grammatical scope in `feature_scopes.py`. Only that scope
+  may set the named analyzer aside; a matching lemma and spelling alone are
+  insufficient. Missing features are not wildcards. Preserve distinct
+  alternatives without allowing their impossible cross-combinations, and
+  test out-of-scope mutations as well as the intended reading. An exception
+  is never a confirmation or a substitute for contextual review.
 
 A new analyzer is an adapter module returning candidates in the corpus
 morph vocabulary plus a vote function in `agree.py`; nothing else changes.

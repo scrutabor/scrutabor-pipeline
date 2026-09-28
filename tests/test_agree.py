@@ -1,7 +1,10 @@
+from itertools import product
+
 import pytest
 
 from scrutabor_pipeline import agree, whitakers
 from scrutabor_pipeline.agree import compare
+from scrutabor_pipeline.feature_scopes import FEATURE_SCOPES, FEATURES, feature_ruling_applies
 
 
 def word(form, lemma, **morph):
@@ -290,6 +293,93 @@ def test_a_ruling_does_not_cover_a_different_word():
     """Rulings are keyed to lemma AND form: they cannot leak."""
     v = compare("t", word("vestris", "vos", pos="pron", case="gen", number="pl"))
     assert v.verdict != "AGREE_RULED"
+
+
+@pytest.mark.parametrize(
+    ("form", "lemma", "morph"),
+    [
+        ("abýssus", "abyssus", dict(pos="noun", case="voc", number="sg", gender="f")),
+        (
+            "prióri",
+            "prior",
+            dict(pos="adj", case="abl", number="sg", gender="n", degree="comp"),
+        ),
+        ("Ísrael", "Israel", dict(pos="noun", case="dat", number="sg", gender="m")),
+    ],
+)
+@pytest.mark.parametrize(("feature", "value"), [("number", "pl"), ("pos", "verb")])
+def test_per_form_ruling_does_not_hide_unrelated_feature_errors(form, lemma, morph, feature, value):
+    wrong = {**morph, feature: value}
+    assert compare("t", word(form, lemma, **wrong)).verdict == "DIVERGE"
+
+
+@pytest.mark.parametrize("case", ["gen", "dat", "acc", "abl"])
+def test_vocative_ruling_does_not_license_other_cases(case):
+    token = word("abýssus", "abyssus", pos="noun", case=case, number="sg", gender="f")
+    assert compare("t", token).verdict == "DIVERGE"
+
+
+def test_indeclinable_case_ruling_does_not_hide_wrong_gender():
+    token = word("Ísrael", "Israel", pos="noun", case="dat", number="sg", gender="f")
+    assert compare("t", token).verdict == "DIVERGE"
+
+
+def test_every_per_form_ruling_has_an_explicit_grammatical_scope():
+    assert set(FEATURE_SCOPES) == set(agree.FEATURE_RULINGS)
+    assert set(FEATURES) == {"pos", *agree.COMPARED}
+    for variants in FEATURE_SCOPES.values():
+        assert variants
+        for candidate in variants:
+            assert "pos" in candidate
+            assert set(candidate) <= set(FEATURES)
+            assert all(candidate.values())
+
+
+@pytest.mark.parametrize("key", sorted(FEATURE_SCOPES))
+def test_per_form_ruling_scope_is_enforced_for_each_compared_feature(key, monkeypatch):
+    # Isolate dispatch from dictionary coverage: each named analyzer always
+    # contradicts, the others are absent. Check every declared alternative,
+    # then mutate one feature at a time outside ALL alternatives of this rule.
+    for name in ("whitakers", "collatinus"):
+        vote = "CONTRADICTS" if name in agree.FEATURE_RULINGS[key] else "ABSENT"
+        monkeypatch.setattr(agree, f"_{name}_vote", lambda *args, vote=vote: (vote, "control"))
+    lemma, form = key.split(":")
+    values = {
+        "pos": (None, "noun", "adj", "verb", "pron", "adv", "prep"),
+        "case": (None, "nom", "gen", "dat", "acc", "abl", "voc", "loc"),
+        "number": (None, "sg", "pl"),
+        "gender": (None, "m", "f", "n"),
+        "person": (None, 1, 2, 3),
+        "tense": (None, "pres", "perf", "fut", "futperf"),
+        "mood": (None, "ind", "subj", "imp", "inf", "part", "ger"),
+        "voice": (None, "act", "pass", "dep"),
+        "degree": (None, "pos", "comp", "sup"),
+    }
+    mutations = 0
+    for candidate in FEATURE_SCOPES[key]:
+        for combination in product(*candidate.values()):
+            morph = dict(zip(candidate, combination, strict=True))
+            assert compare("control", word(form, lemma, **morph)).verdict == "EDITORIAL_ONLY"
+            for feature in FEATURES:
+                for value in values[feature]:
+                    changed = {**morph, feature: value}
+                    # Derive the expected domain directly from the declarations,
+                    # not by asking the function under test to classify it.
+                    allowed = any(
+                        all(changed.get(f) in alternative.get(f, (None,)) for f in FEATURES)
+                        for alternative in FEATURE_SCOPES[key]
+                    )
+                    if not allowed:
+                        mutations += 1
+                        assert not feature_ruling_applies(key, changed)
+                        assert compare("control", word(form, lemma, **changed)).verdict == "DIVERGE"
+    assert mutations > 0
+
+
+def test_a_new_unscoped_ruling_cannot_discard_a_contradiction(monkeypatch):
+    monkeypatch.setitem(agree.FEATURE_RULINGS, "mater:Mater", {"whitakers": "unscoped"})
+    token = word("Mater", "mater", pos="noun", case="acc", number="sg", gender="f")
+    assert compare("t", token).verdict == "DIVERGE"
 
 
 def test_summis_adjective_retains_collatinus_confirmation():
