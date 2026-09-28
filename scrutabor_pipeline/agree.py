@@ -109,6 +109,9 @@ LEMMA_ALIASES: dict[str, tuple[str, ...]] = {
     "brachium": ("brachium", "bracchium"),
     "ceno": ("ceno", "coeno"),
     "coniunx": ("coniunx", "coniux"),
+    # The Missal prints the doubled i (próiice, proiiciéntes); Collatinus
+    # heads the verb as proicio.
+    "proiicio": ("proiicio", "proicio"),
 }
 
 
