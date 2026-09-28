@@ -61,6 +61,7 @@ LEMMA_ALIASES: dict[str, tuple[str, ...]] = {
     "supra_adverbium": ("supra", "superius"),
     "foris_adverbium": ("foris",),  # outside, distinct from foris the door
     "intro_adverbium": ("intro",),  # inside, distinct from the verb intrare
+    "secundo_adverbium": ("secundo",),  # a second time, secondly, distinct from the verb secundare
     "dico_dedicare": ("dico",),  # dedicate, first conjugation, not dicere (say)
     "volo_volare": ("volo",),  # fly, first conjugation, not velle (wish)
     "praedico_praedicere": ("praedico",),  # foretell, third conjugation, not proclaim
@@ -957,6 +958,14 @@ FEATURE_RULINGS: dict[str, dict[str, str]] = {
             "indicative has the same form, as Collatinus has it (and Whitaker's itself for "
             "fúerit); in cum inebriáti fúerint, tunc id, quod detérius est (Jn 2:10) the "
             "temporal cum answered by tunc is the future perfect indicative"
+        ),
+    },
+    "secundo_adverbium:secúndo": {
+        "whitakers": (
+            "gives secúndo only as the ablative of the adjective secundus; in Íterum secúndo "
+            "ábiit (Mt 26:42), secúndo sine peccáto apparébit (Heb 9:28) and secúndo prophétas "
+            "(1 Cor 12:28) it is the adverb, a second time, secondly (Lewis and Short s.v. "
+            "secundo), as primo and tértio are read and as Collatinus has it"
         ),
     },
     "supra_adverbium:supérius": {
