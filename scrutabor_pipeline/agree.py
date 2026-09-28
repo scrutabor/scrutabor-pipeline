@@ -97,6 +97,9 @@ LEMMA_ALIASES: dict[str, tuple[str, ...]] = {
     # Collatinus heads the superlative nequissimus (most wicked) as its own
     # entry; the corpus lemmatizes superlatives under the positive, nequam.
     "nequam": ("nequam", "nequissimus"),
+    # The Missal prints asto five times and adstat once; the corpus keeps one
+    # key, and both analyzers head the assimilated spelling's forms as adsto.
+    "asto": ("asto", "adsto"),
 }
 
 
