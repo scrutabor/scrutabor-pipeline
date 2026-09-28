@@ -1,4 +1,6 @@
-from scrutabor_pipeline import agree
+import pytest
+
+from scrutabor_pipeline import agree, whitakers
 from scrutabor_pipeline.agree import compare
 
 
@@ -503,3 +505,65 @@ def test_ii_genitive_sets_whitakers_aside_for_its_locative_only_table():
     assert "whitakers" not in verdict.sources.split("+")
     genitive["morph"]["case"] = "dat"
     assert compare("t", genitive).verdict == "DIVERGE"
+
+
+@pytest.mark.parametrize(
+    ("feature", "value"),
+    [("number", "pl"), ("gender", "f"), ("tense", "perf"), ("voice", "pass"), ("person", 3)],
+)
+def test_gerund_category_gap_does_not_hide_other_wrong_features(feature, value):
+    gerund = word(
+        "moriéndi",
+        "morior",
+        pos="verb",
+        mood="ger",
+        tense="pres",
+        voice="act",
+        case="gen",
+        number="sg",
+        gender="n",
+        conj=3,
+    )
+    gerund["morph"][feature] = value
+    verdict = compare("t", gerund)
+    assert verdict.verdict == "DIVERGE"
+    assert "has no gerund" not in verdict.detail
+
+
+@pytest.mark.parametrize(("pos", "decl"), [("adj", 2), ("noun", 3)])
+def test_ii_gap_is_limited_to_second_declension_nouns(monkeypatch, pos, decl):
+    candidate = whitakers.Candidate(1, pos, (("case", "loc"), ("number", "sg"), ("gender", "n")))
+    monkeypatch.setattr(whitakers, "candidates", lambda _: [candidate])
+    monkeypatch.setattr(whitakers, "lemma_candidates", lambda _: [candidate])
+    ours = {"case": "gen", "number": "sg", "gender": "n", "decl": decl}
+    vote, _ = agree._whitakers_vote(word("sacrifícii", "sacrificium"), pos, ours)
+    assert vote == "CONTRADICTS"
+
+
+def test_category_gap_cannot_be_inferred_from_an_unrelated_lemma(monkeypatch):
+    form_candidate = whitakers.Candidate(
+        1,
+        "verb",
+        (("tense", "fut"), ("voice", "pass"), ("case", "gen"), ("number", "sg"), ("gender", "n")),
+    )
+    lemma_candidate = whitakers.Candidate(2, "verb")
+    monkeypatch.setattr(whitakers, "candidates", lambda _: [form_candidate])
+    monkeypatch.setattr(whitakers, "lemma_candidates", lambda _: [lemma_candidate])
+    ours = {
+        "mood": "ger",
+        "tense": "pres",
+        "voice": "act",
+        "case": "gen",
+        "number": "sg",
+        "gender": "n",
+    }
+    vote, _ = agree._whitakers_vote(word("moriéndi", "morior"), "verb", ours)
+    assert vote == "CONTRADICTS"
+
+
+def test_ii_genitive_with_an_actual_genitive_reading_still_confirms():
+    genitive = word(
+        "Evangélii", "evangelium", pos="noun", case="gen", number="sg", gender="n", decl=2
+    )
+    verdict = compare("t", genitive)
+    assert "whitakers" in verdict.sources.split("+")

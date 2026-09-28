@@ -1135,21 +1135,32 @@ def _pos_match(our_pos: str, candidate_pos: str) -> bool:
     return candidate_pos == our_pos or candidate_pos in POS_RULINGS.get(our_pos, set())
 
 
-def _whitakers_class_gap(form: str, ours: dict, theirs: dict) -> str | None:
+def _whitakers_class_gap(form: str, our_pos: str, ours: dict, theirs: dict) -> str | None:
     """A reading Whitaker's tables cannot give, recognized by what they print instead.
 
     It has no gerund: every -nd- form comes back as the gerundive (the future
     passive participle), whose neuter singular in the oblique cases is the
-    gerund's own form. And its tables give the -ii genitive singular of
-    second-declension nouns in -ius and -ium (sacrifícii, iudícii, fílii) only
-    as a locative, a case these nouns do not have in use. In both cases the
-    analyzer is set aside, never counted as confirming: it cannot tell the
-    gerund from the gerundive, and it does not print the genitive at all.
+    gerund's own form. Some second-declension -ii genitives are returned only
+    as locatives. These gaps excuse only the named category mismatch, not
+    other incompatible features. The caller must also establish that both
+    readings belong to the same lemma. Setting the analyzer aside never
+    counts as confirmation; ordinary genitive readings still take precedence.
     """
     if ours.get("mood") == "ger":
         if (
-            theirs.get("tense") == "fut"
+            our_pos == "verb"
+            and ours.get("tense") == "pres"
+            and ours.get("voice") == "act"
+            and ours.get("number") == "sg"
+            and ours.get("gender") == "n"
+            and ours.get("case") in {"gen", "dat", "acc", "abl"}
+            and ours.get("person") is None
+            and ours.get("degree") is None
+            and theirs.get("tense") == "fut"
             and theirs.get("voice") == "pass"
+            and theirs.get("mood") in (None, "part")
+            and theirs.get("person") is None
+            and theirs.get("degree") is None
             and theirs.get("case") == ours.get("case")
             and theirs.get("number") == "sg"
             and theirs.get("gender") == "n"
@@ -1160,11 +1171,14 @@ def _whitakers_class_gap(form: str, ours: dict, theirs: dict) -> str | None:
             )
         return None
     if (
-        ours.get("case") == "gen"
+        our_pos == "noun"
+        and ours.get("decl") == 2
+        and ours.get("case") == "gen"
         and ours.get("number") == "sg"
         and theirs.get("case") == "loc"
         and theirs.get("number") == "sg"
         and theirs.get("gender") in (None, ours.get("gender"))
+        and _features_match({**ours, "case": "loc"}, theirs)
         and analyzer_query(form).endswith("ii")
     ):
         return (
@@ -1178,24 +1192,26 @@ def _whitakers_vote(word: dict, our_pos: str, ours: dict) -> tuple[str, str]:
     cands = whitakers.candidates(word["form"])
     if not cands:
         return "ABSENT", ""
-    matching = [
-        c for c in cands if _pos_match(our_pos, c.pos) and _features_match(ours, c.feature_dict())
-    ]
-    if not matching:
-        for c in cands:
-            gap = _pos_match(our_pos, c.pos) and _whitakers_class_gap(
-                word["form"], ours, c.feature_dict()
-            )
-            if gap:
-                return "CLASS_GAP", gap
-        proposals = sorted({f"{c.pos}:{c.feature_dict()}" for c in cands})
-        return "CONTRADICTS", f"whitakers proposes {proposals[:6]}"
     identities = {
         c.identity
         for spelling in link_spellings(word["lemma"])
         for c in whitakers.lemma_candidates(spelling)
         if c.identity is not None and _pos_match(our_pos, c.pos)
     }
+    matching = [
+        c for c in cands if _pos_match(our_pos, c.pos) and _features_match(ours, c.feature_dict())
+    ]
+    if not matching:
+        for c in cands:
+            gap = (
+                c.identity in identities
+                and _pos_match(our_pos, c.pos)
+                and _whitakers_class_gap(word["form"], our_pos, ours, c.feature_dict())
+            )
+            if gap:
+                return "CLASS_GAP", gap
+        proposals = sorted({f"{c.pos}:{c.feature_dict()}" for c in cands})
+        return "CONTRADICTS", f"whitakers proposes {proposals[:6]}"
     if any(c.identity in identities for c in matching):
         return "CONFIRMS", ""
     return "FORM_MATCH", f"whitakers cannot link lemma {word['lemma']!r}"
