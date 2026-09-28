@@ -100,6 +100,12 @@ LEMMA_ALIASES: dict[str, tuple[str, ...]] = {
     # The Missal prints asto five times and adstat once; the corpus keeps one
     # key, and both analyzers head the assimilated spelling's forms as adsto.
     "asto": ("asto", "adsto"),
+    # One word in two printed spellings, one key each: brachium (bracchium
+    # three times), ceno (the Canon's coenatum), coniunx (coniux, said of
+    # Joachim); the analyzers head each spelling on its own.
+    "brachium": ("brachium", "bracchium"),
+    "ceno": ("ceno", "coeno"),
+    "coniunx": ("coniunx", "coniux"),
 }
 
 
