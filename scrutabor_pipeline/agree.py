@@ -767,6 +767,12 @@ FEATURE_RULINGS: dict[str, dict[str, str]] = {
             "offers only the adjective viduus; hæc vídua (Lk 2:37, 7:12) is the noun widow"
         ),
     },
+    "vidua:víduas": {
+        "whitakers": (
+            "offers only the adjective viduus and the verb viduo; pupíllos et víduas "
+            "(Jas 1:27) are the widows, the noun, as vídua in Lk 2:37 and 7:12"
+        ),
+    },
     "proximus:próximum": {
         "whitakers": (
             "heads the neighbour as a noun; the corpus tags próximus as the adjective, used"
