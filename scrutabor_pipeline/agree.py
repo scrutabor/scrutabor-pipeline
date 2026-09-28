@@ -112,6 +112,9 @@ LEMMA_ALIASES: dict[str, tuple[str, ...]] = {
     # The Missal prints the doubled i (próiice, proiiciéntes); Collatinus
     # heads the verb as proicio.
     "proiicio": ("proiicio", "proicio"),
+    # Likewise subiícere (Phil 3:21); Whitaker's knows only subicio, and
+    # Collatinus heads the perfect forms (subiécit, subiéctis) there.
+    "subiicio": ("subiicio", "subicio"),
 }
 
 
