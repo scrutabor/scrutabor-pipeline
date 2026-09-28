@@ -65,6 +65,7 @@ LEMMA_ALIASES: dict[str, tuple[str, ...]] = {
     "volo_volare": ("volo",),  # fly, first conjugation, not velle (wish)
     "praedico_praedicere": ("praedico",),  # foretell, third conjugation, not proclaim
     "colo_colare": ("colo",),  # strain, refine, first conjugation, not colere (till)
+    "fundo_stabilio": ("fundo",),  # found, establish, first conjugation, not fundere (pour)
     "continuo_continuare": ("continuo",),  # continue, join, first conjugation, not the adverb
     "labor_labi": ("labor",),  # deponent labi, not the noun laboris
     "mundus_purus": ("mundus",),  # clean, not the noun meaning world
