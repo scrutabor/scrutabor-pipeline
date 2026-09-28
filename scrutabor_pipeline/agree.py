@@ -635,7 +635,7 @@ FEATURE_RULINGS: dict[str, dict[str, str]] = {
     },
     "prior:prior": {
         "whitakers": (
-            "heads prior only as the noun (a superior); quia prior me erat (Jn 1:15) and "
+            "heads prior only as the noun (a superior); quia prior me erat (Jn 1:30) and "
             "quis prior dedit illi (Rom 11:35) are the comparative adjective"
         ),
     },
