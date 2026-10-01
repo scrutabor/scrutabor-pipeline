@@ -41,7 +41,7 @@ CASE = {
     "ACC": "acc",
     "ABL": "abl",
     "VOC": "voc",
-    "LOC": "loc",  # not a corpus case; a LOC-only candidate never matches
+    "LOC": "loc",
 }
 
 NUMBER = {"S": "sg", "P": "pl"}

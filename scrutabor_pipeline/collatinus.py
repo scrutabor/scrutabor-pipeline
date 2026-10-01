@@ -27,7 +27,7 @@ TOKENS = {
     "accusatif": ("case", "acc"),
     "ablatif": ("case", "abl"),
     "vocatif": ("case", "voc"),
-    "locatif": ("case", "loc"),  # not a corpus case; never matches
+    "locatif": ("case", "loc"),
     "singulier": ("number", "sg"),
     "pluriel": ("number", "pl"),
     "masculin": ("gender", "m"),

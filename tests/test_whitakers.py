@@ -166,7 +166,7 @@ def test_every_part_of_speech_key_is_one_a_lexeme_can_carry():
 # SUPER left the whole suite green until 2026-08-19.
 FEATURE_ORACLES = [
     ("Dómino", "case", "dat", "dative singular of dominus"),
-    ("domi", "case", "loc", "the locative of domus — a case the corpus has none of"),
+    ("domi", "case", "loc", "the locative singular of domus"),
     ("sǽcula", "gender", "n", "neuter plural of saeculum"),
     ("erat", "tense", "impf", "imperfect of sum"),
     ("véniet", "tense", "fut", "future of venio"),
