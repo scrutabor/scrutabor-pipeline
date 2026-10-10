@@ -49,6 +49,9 @@ POS_RULINGS: dict[str, set[str]] = {
 # right.
 LEMMA_ALIASES: dict[str, tuple[str, ...]] = {
     "ab": ("a", "ab"),  # Whitaker's carries a and ab as two entries
+    # Lewis and Short heads affero and adfero as the same verb.
+    # Collatinus keeps the unassimilated dictionary spelling.
+    "affero": ("affero", "adfero"),
     "tu": ("tu", "tecum"),  # Collatinus dictionaries the fused tecum itself
     # Lewis and Short, dextera: both spellings name the feminine noun.
     # Collatinus heads it under dextra; dexterus is a distinct adjective.
