@@ -122,6 +122,7 @@ FEATURE_SCOPES: dict[str, tuple[Scope, ...]] = {
     "semel:semel": (scope(pos="adv"),),
     "bis:bis": (scope(pos="adv"),),
     "quinquies:quínquies": (scope(pos="adv"),),
+    "Damascus:Damásci": (nominal("noun", "loc", "sg", "f"),),
     "villicatio:villicatiónis": (nominal("noun", "gen", "sg", "f"),),
     "villicatio:villicatiónem": (nominal("noun", "acc", "sg", "f"),),
     "villicatio:villicatióne": (nominal("noun", "abl", "sg", "f"),),

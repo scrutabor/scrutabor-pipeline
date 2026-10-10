@@ -600,6 +600,18 @@ FEATURE_RULINGS: dict[str, dict[str, str]] = {
         )
     },
     # --- gender ---
+    "Damascus:Damásci": {
+        "whitakers": (
+            "heads Damascus as masculine; Damásci ... custodiebat civitatem Damascenorum "
+            "(2 Cor 11:32) locates the episode in the feminine city, Damascus, -i, f. "
+            "in Lewis and Short; its masculine locative cannot confirm this reading"
+        ),
+        "collatinus": (
+            "offers genitives and nominative/vocative plurals, not the feminine singular "
+            "locative of the city in Damásci ... custodiebat civitatem Damascenorum "
+            "(2 Cor 11:32); the city-location construction is a locative, not a genitive"
+        ),
+    },
     "villicatio:villicatiónis": {
         "whitakers": (
             "carries villicatio as masculine; like every -tio abstract, and as Lewis and "
