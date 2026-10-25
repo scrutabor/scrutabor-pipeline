@@ -218,6 +218,10 @@ def test_ruling_never_invents_a_confirmation():
     )
     assert v.verdict == "EDITORIAL_ONLY"
     assert "no analyzer confirms" in v.detail
+    assert v.sources == ""
+    assert "the form is the 1st plural of quaeso" in v.detail
+    assert "as Whitaker's" not in v.detail
+    assert "every grammar" not in v.detail
 
 
 def test_pressura_ruling_preserves_independent_confirmation():

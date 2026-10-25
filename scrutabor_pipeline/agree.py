@@ -169,8 +169,7 @@ FEATURE_RULINGS: dict[str, dict[str, str]] = {
     "quaeso:quǽsumus": {
         "collatinus": (
             "reads the fossilised parenthetical as its own lemma and tags it "
-            "3rd singular; the form is the 1st plural of quaeso, as Whitaker's "
-            "and every grammar have it"
+            "3rd singular; the form is the 1st plural of quaeso"
         )
     },
     "vos:vobíscum": {
