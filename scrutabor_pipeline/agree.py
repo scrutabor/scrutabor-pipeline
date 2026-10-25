@@ -1015,6 +1015,16 @@ FEATURE_RULINGS: dict[str, dict[str, str]] = {
 # name. The named analyzer abstains from any opinion based on that homograph;
 # the same lowercase common word remains fully machine-checkable.
 CASEFOLD_HOMOGRAPH_RULINGS: dict[str, dict[str, str]] = {
+    "Paschalis:Paschálem": {
+        "whitakers": (
+            "carries only the adjective paschalis, of Easter or Passover; its accusative "
+            "cannot establish the saint's proper name"
+        ),
+        "collatinus": (
+            "likewise heads paschalis under the adjective model fortis, not a proper-name "
+            "noun; matching accusative features cannot establish the saint's name"
+        ),
+    },
     "Felicitas:Felicitáte": {
         "whitakers": (
             "carries the common noun felicitas (happiness), not the martyr Felicitas; its "
@@ -1112,6 +1122,24 @@ CASEFOLD_HOMOGRAPH_RULINGS: dict[str, dict[str, str]] = {
     },
     "Simon:Simóne": {
         "whitakers": ("reads an adjective; that match cannot establish the Apostle Simon"),
+    },
+}
+
+# A transferred given-name element may share a genuine noun/epithet entry.
+# Scope that identity distinction to the text: the literal Baptist elsewhere
+# remains supported by the same dictionary noun, even at the same inflection.
+CONTEXT_CASEFOLD_HOMOGRAPH_RULINGS: dict[str, dict[str, dict[str, str]]] = {
+    "proprium.sancti-ioannis-baptistae-de-la-salle-collecta": {
+        "Baptista:Baptístam": {
+            "whitakers": (
+                "carries the noun baptista, baptizer or Baptist; its inflection does not "
+                "establish this transferred compound given-name use for John Baptist de La Salle"
+            ),
+            "collatinus": (
+                "likewise carries the masculine noun baptista; matching noun features do "
+                "not establish this transferred given-name element in the La Salle prayer"
+            ),
+        },
     },
 }
 
@@ -1262,7 +1290,10 @@ def compare(text_id: str, word: dict) -> Verdict:
     # capitalized proper name. Set that named analyzer's opinion aside whether
     # it called the common-word parse matching or contradictory; this never
     # affects the lowercase lexeme.
-    identity_rulings = CASEFOLD_HOMOGRAPH_RULINGS.get(key, {})
+    identity_rulings = {
+        **CASEFOLD_HOMOGRAPH_RULINGS.get(key, {}),
+        **CONTEXT_CASEFOLD_HOMOGRAPH_RULINGS.get(text_id, {}).get(key, {}),
+    }
     ruled = [
         f"{name} set aside: {reason}"
         for name, reason in identity_rulings.items()
